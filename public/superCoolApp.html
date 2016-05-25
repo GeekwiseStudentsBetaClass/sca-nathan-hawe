@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="superCoolApp">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script type="text/javascript" src="angular.js"></script>
+        <script type="text/javascript" src="app.js"></script>
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+    </head>
+    
+    <body>
+    <div class="container">
+        <div class="jumbotron"><h1>Super Cool App</h1><p>The superest cool app!</p></div>
+            <div class="row">
+              <div class="col-sm-4">
+                <div ng-controller="FeatureController as featureCtrl">
+                    <section class="well well-sm" ng-repeat="feature in featureCtrl.features">
+                    <h3>{{feature.name}}</h3>
+                    <p>{{feature.description}}</p>
+                    </section>
+                </div>
+                <form role="form" ng-controller="AddFeatureController as addFeatureCtrl" ng-submit="addFeatureCtrl.submitFeature()" novalidate>
+                    <h3>{{addFeatureCtrl.feature.name}}</h3>
+                    <p>{{addFeatureCtrl.feature.description}}</p>
+                    <input type="text" class="form-control" ng-model="addFeatureCtrl.feature.name" placeholder="Feature name..." />
+                    <textarea class="form-control" ng-model="addFeatureCtrl.feature.description" placeholder="description"></textarea>
+                    <input type="submit" value="submit" />
+                </form>
+              </div>
+              <div class="col-sm-8">
+                <div ng-controller="CommentController as commentCtrl">
+                    <section class="well well-sm" ng-repeat="comment in commentCtrl.comments">
+                    <p>{{comment.commentText}}</p>
+                    <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>
+                    </section>
+                </div>
+                <form role="form" ng-controller="AddCommentController as addCommentCtrl" ng-submit="addCommentCtrl.submitComment()" novalidate>
+                    <input type="text" class="form-control" placeholder="Username..." ng-model="addCommentCtrl.comment.user" />
+                    <textarea class="form-control" ng-model="addCommentCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
+                    <input type="submit" value="Submit" class="btn btn-default"/>
+                </form>
+              </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
