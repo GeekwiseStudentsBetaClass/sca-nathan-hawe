@@ -6,7 +6,6 @@ var app = express();
 // Allows static pages to be served from the public folder
 app.use(express.static('public'));
 
-
 // User body-parser
 app.use(bodyParser.json());
 
@@ -22,8 +21,6 @@ app.listen(3000, function(){
     console.log('Example app listening on port 3000!');
     
 });
-
-
 
 /* API */
 app.get('/api/getFeatures', function(req, res){
@@ -45,8 +42,9 @@ app.get('/api/getFeatures', function(req, res){
             
             db.close();
         });
-    });
+    }); 
 });
+
 
 app.post('/api/addFeature', function(req, res){
    // Insert document into features collection
@@ -120,12 +118,41 @@ app.post('/api/addComment', function(req, res){
     });
 });
 
+app.post('/api/addVote', function(req, res){
+   // Insert document into votes collection
+   
+   /* INSERT ERROR CHECKING/HANDLING */
+   // Need to ensure there's a valid user and valid related feature
+   
+   MongoClient.connect(url, function(err, db){
+        assert.equal(null, err);
+        console.log("Connected correctly for addVote.");
+   
+        addVote(db, req.body, function(err, results){
+            console.log("Err: " + err);
+            console.log("Results: " + results);
+            if(err){
+                console.log("There was an error: " + err);
+            }
+            else{
+                console.log(results);
+                res.status(201).send("success");
+            }
+            
+            db.close();
+        });
+    });
+});
 
 /* Database stuff */
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectId;
 var url = 'mongodb://localhost:27017/test';
+
+var addVote = function(db, doc, callback){
+    db.collection('votes').insertOne(doc, callback);
+}
 
 
 var addFeature = function(db, doc, callback){

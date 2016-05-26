@@ -2,10 +2,7 @@
     var app = angular.module('superCoolApp', []);
     
     app.controller('FeatureController', ['$http', '$interval', function($http, $interval){
-        this.features = [
-            {"name":"Test 1", "description":"This is Test 1"},
-            {"name":"Test 2", "description":"This is Test 2"}
-        ];
+        this.features = [];
         var featureList = this;
         
         // Make an API connection
