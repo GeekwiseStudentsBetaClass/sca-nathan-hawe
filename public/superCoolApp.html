@@ -14,10 +14,12 @@
             <div class="row">
               <div class="col-sm-4">
                 <div ng-controller="FeatureController as featureCtrl">
-                    <section class="well well-sm" ng-repeat="feature in featureCtrl.features">
-                    <h3>{{feature.name}}</h3>
-                    <p>{{feature.description}}</p>
-                    </section>
+                    <div ng-repeat="feature in featureCtrl.features">
+                        <section class="well well-sm" ng-class="feature.selected">
+                        <h3>{{feature.name}}</h3>
+                        <p>{{feature.description}}</p>
+                        </section>
+                    </div>
                 </div>
               </div>
               <div class="col-sm-8">

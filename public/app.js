@@ -6,29 +6,17 @@
         var featureList = this;
         
         // Make an API connection
-        this.update = function(){
-            $http.get('api/getFeatures').success(function(data){
-                console.log('attempting getFeatures')
-                featureList.features = data;
-            });
-        };
-        
-        this.update();
-        $interval(this.update, 10000, this);
+        $http.get('api/getFeatures').success(function(data){
+            console.log('attempting getFeatures')
+            featureList.features = data;
+            if(featureList.features[0]){
+                featureList.features[0].selected = "active";
+            }
+            console.log(featureList.features);
+        });
     }]);
     
-    app.controller('AddFeatureController', ['$http', function($http){
-        this.feature = {};
-        var features = this;
-        
-        this.submitFeature = function(){
-            $http.post('api/addFeature', features.feature).success(function(data){
-                console.log(data);
-                features.feature = {};
-            });
-        };
-    }]);
-    
+
     app.controller('CommentController', ['$http', '$interval', function($http, $interval){
         this.comments = {};
         var commentList = this;
