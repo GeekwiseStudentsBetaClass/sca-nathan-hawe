@@ -3,8 +3,9 @@
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script type="text/javascript" src="angular.js"></script>
-        <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript" src="js/angular.js"></script>
+        <script type="text/javascript" src="js/database/superCoolApp.database.js"></script>
+        <script type="text/javascript" src="js/superCoolApp.js"></script>
         <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
     </head>
     
@@ -12,28 +13,31 @@
     <div class="container">
         <div class="jumbotron"><h1>Super Cool App</h1><p>The superest cool app!</p></div>
             <div class="row">
-              <div class="col-sm-4">
-                <div ng-controller="FeatureController as featureCtrl">
-                    <div ng-repeat="feature in featureCtrl.features">
-                        <section class="well well-sm" ng-class="feature.selected">
-                        <h3>{{feature.name}}</h3>
-                        <p>{{feature.description}}</p>
+              <div ng-controller="FeaturesController as featureCtrl">
+                <div class="col-sm-4">
+                
+                        <div ng-repeat="feature in featureCtrl.data.features">
+                            <section class="well well-sm" ng-click="featureCtrl.selectFeature(feature._id)">
+                            <h3>{{feature.name}}</h3>
+                            <p>{{feature.description}}</p>
+                            </section>
+                        </div>
+                    
+                </div>
+                <div class="col-sm-8">
+                    <div ng-controller="CommentsController as commentCtrl">
+                        <section class="well well-sm" ng-repeat="comment in commentCtrl.data.comments">
+                            <p>{{comment.commentText}}</p>
+                            <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>
                         </section>
+                    
+                        <form role="form" ng-submit="commentCtrl.submitComment()" novalidate>
+                            <input type="text" class="form-control" placeholder="Username..." ng-model="commentCtrl.comment.user" />
+                            <textarea class="form-control" ng-model="commentCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
+                            <input type="submit" value="Submit" class="btn btn-default"/>
+                        </form>
                     </div>
                 </div>
-              </div>
-              <div class="col-sm-8">
-                <div ng-controller="CommentController as commentCtrl">
-                    <section class="well well-sm" ng-repeat="comment in commentCtrl.comments">
-                    <p>{{comment.commentText}}</p>
-                    <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>
-                    </section>
-                </div>
-                <form role="form" ng-controller="AddCommentController as addCommentCtrl" ng-submit="addCommentCtrl.submitComment()" novalidate>
-                    <input type="text" class="form-control" placeholder="Username..." ng-model="addCommentCtrl.comment.user" />
-                    <textarea class="form-control" ng-model="addCommentCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
-                    <input type="submit" value="Submit" class="btn btn-default"/>
-                </form>
               </div>
             </div>
         </div>

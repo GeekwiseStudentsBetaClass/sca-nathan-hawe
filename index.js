@@ -71,7 +71,7 @@ app.post('/api/addFeature', function(req, res){
     });
 });
 
-app.get('/api/getComments', function(req, res){
+app.post('/api/getComments', function(req, res){
     // Query database for list of comments for feature passed
     
     /* INSERT ERROR CHECKING/HANDLING */
@@ -80,7 +80,7 @@ app.get('/api/getComments', function(req, res){
         assert.equal(null, err);
         console.log("Connected correctly for getComments.");
    
-        getComments(db, function(err, docs){
+        getComments(db, req.body, function(err, docs){
             if(err){
                 console.log("There was an error: " + err);
             }
@@ -172,10 +172,11 @@ var addComment = function(db, doc, callback){
     db.collection('comments').insertOne(doc, callback);
 }
 
-var getComments = function(db, callback){
-    // Return all features sorted descending by score and ascending by name
+var getComments = function(db, query, callback){
+    console.log(query);
+    // Return all comments with the passed query
     db.collection('comments')
-        .find( {"hidden": {$ne: true} })
+        .find(query)
         .sort( {"dateCreated":1} )
         .toArray(callback);
 }
