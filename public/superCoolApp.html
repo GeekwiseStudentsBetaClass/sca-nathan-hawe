@@ -17,7 +17,7 @@
                 <div class="col-sm-4">
                 
                         <div ng-repeat="feature in featureCtrl.data.features">
-                            <section class="well well-sm" ng-click="featureCtrl.selectFeature(feature._id)">
+                            <section class="well well-sm" ng-click="featureCtrl.selectFeature($index)">
                             <h3>{{feature.name}}</h3>
                             <p>{{feature.description}}</p>
                             </section>

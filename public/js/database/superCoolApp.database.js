@@ -15,7 +15,9 @@
             comments: []
         }
         
-        this.selected = ""; // The currently selected feature
+        this.selected = {}; // The current selected feature;
+        
+        var selectedIndex = -1; // The currently selected feature
         
         /* Define method to retrieve features */
         this.getFeatures = function(callback){
@@ -35,13 +37,19 @@
         
         
         /* Define method to retrieve comments for passed feature */
-        this.getCommentsForFeature = function(featureId){
-            console.log('attempting getComments for ' + featureId);
-            me.selected = featureId;
+        this.getCommentsForFeature = function(featureIndex){
+            console.log('attempting getComments for ' + featureIndex);
 
             // Prepare JSON object to be sent with callback
+            if(!me.data.features[featureIndex]){
+                console.log('No feature at index ' + me.selectedIndex);
+                return;    
+            }
+            
+            me.selected = me.data.features[featureIndex];
+            
             var query = {
-                relatedFeature:featureId
+                relatedFeature:me.selected._id
             };
             
             $http.post('api/getComments', query).success(function(data){
@@ -56,7 +64,7 @@
             console.log('attempting addCommentForFeature ' + comment + ' ' + me.selected);
             
             // !!!!!!!Ensure that the comment has the required fields!!!!!!
-            comment.relatedFeature = me.selected;
+            comment.relatedFeature = me.selected._id;
             
             // POST the comment
             $http.post('api/addComment', comment).success(function(data){
@@ -75,7 +83,7 @@
             if(me.data.features[0]){
                 console.log(me.data);
                 // Insert code here to set the object to selected
-                return me.getCommentsForFeature(me.data.features[0]._id);
+                return me.getCommentsForFeature(0);
             }
             return;
         });
