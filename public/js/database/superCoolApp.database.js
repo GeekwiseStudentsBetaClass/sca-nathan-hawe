@@ -15,9 +15,7 @@
             comments: []
         }
         
-        this.selected = {}; // The current selected feature;
-        
-        var selectedIndex = -1; // The currently selected feature
+        this.selected = {}; // The currently selected feature;
         
         /* Define method to retrieve features */
         this.getFeatures = function(callback){
@@ -47,6 +45,7 @@
             }
             
             me.selected = me.data.features[featureIndex];
+            console.log(me.selected);
             
             var query = {
                 relatedFeature:me.selected._id
@@ -93,11 +92,13 @@
     /* Features Controller */
     myApp.controller('FeaturesController', ['superCoolAppDatabaseService', function(superCoolAppDatabaseService){
         // Bind data
+        var me = this;
         this.data = superCoolAppDatabaseService.data;
         
-        this.selectFeature = function(featureId){
-            superCoolAppDatabaseService.getCommentsForFeature(featureId);  
-        };
+        this.test = function(input){
+            console.log(input);
+        }
+             
     }]);
     
     
@@ -105,7 +106,7 @@
     myApp.controller('CommentsController', ['superCoolAppDatabaseService', function(superCoolAppDatabaseService){
         var me = this;
         // Bind data
-        this.data = superCoolAppDatabaseService.data
+        this.data = superCoolAppDatabaseService.data;
         this.comment = {};
         
         // Handle submissions

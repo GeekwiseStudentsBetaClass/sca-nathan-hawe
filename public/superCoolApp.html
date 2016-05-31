@@ -15,14 +15,14 @@
             <div class="row">
               <div ng-controller="FeaturesController as featureCtrl">
                 <div class="col-sm-4">
-                
-                        <div ng-repeat="feature in featureCtrl.data.features">
-                            <section class="well well-sm" ng-click="featureCtrl.selectFeature($index)">
-                            <h3>{{feature.name}}</h3>
-                            <p>{{feature.description}}</p>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li ng-repeat="feature in featureCtrl.data.features" ng-click="featureCtrl.test($index)">
+                            <!--<section class="well well-sm" ng-click="featureCtrl.selectFeature($index)">-->
+                            <a><h3>{{feature.name}}</h3>
+                            <p>{{feature.description}}</p></a>
                             </section>
                         </div>
-                    
+                    </ul>
                 </div>
                 <div class="col-sm-8">
                     <div ng-controller="CommentsController as commentCtrl">
