@@ -26,6 +26,8 @@
                     <div ng-repeat="feature in featureCtrl.data.features" ng-show="featureCtrl.tab === $index">
                         <h3>{{feature.name}}</h3>
                         <p>{{feature.description}}</p>
+                        <div ng-click="featureCtrl.addUpVote()">Upvote!</div>
+                        <div ng-click="featureCtrl.addDownVote()">Downvote!</div>
                         <section class="well well-sm" ng-repeat="comment in feature.featureComments">
                             <p>{{comment.commentText}}</p>
                             <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>

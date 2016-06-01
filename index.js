@@ -204,11 +204,19 @@ var getComments = function(db, query, callback){
         .toArray(callback);
 }
 
+var addVote = function(db, doc, callback){
+    doc.dateCreated = new Date();   // Add date to the comment
+    doc.relatedFeature = require('mongodb').ObjectId(doc.relatedFeature);
+    db.collection('votes').insertOne(doc, callback);
+}
+
 var join = function(db, callback){
+    var tempDb = db;
     console.log('attempting join');
     
     db.collection('features').aggregate([
-        {$lookup:
+        {
+            $lookup:    // Join to comments
             {
                 from: "comments",
                 localField: "_id",

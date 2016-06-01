@@ -76,6 +76,27 @@
             });
         }
         
+        /* Define method to add votes */
+        this.addVoteForFeature = function(isUpVote, callback){
+            console.log('attempting addVoteForFeature ' + isUpVote + ' ' + me.selected);
+      
+            // !!!!!!!Ensure that the vote has the required fields!!!!!!
+            var vote = {
+                relatedFeature: me.selected._id,
+                isUpVote: isUpVote
+            };
+            
+            // POST the comment
+            $http.post('api/addVote', vote).success(function(data){
+               console.log('api/addVote response: ' + data);
+               
+               // If a callback exists, run it
+               if(!(callback===undefined)){
+                   return callback();
+               }
+            });
+        }
+        
         
         //When created, get list of features and make the first feature selected
         this.getFeatures(function(){
@@ -106,6 +127,16 @@
             return superCoolAppDatabaseService.addCommentForFeature(me.comment, function(){
                 me.comment = {};
             });
+        };
+        
+        // Handle upvotes
+        this.addUpVote = function(){
+            return superCoolAppDatabaseService.addVoteForFeature(true)
+        };
+        
+        // Handle downvotes
+        this.addDownVote = function(){
+            return superCoolAppDatabaseService.addVoteForFeature(false)
         };
              
     }]);
