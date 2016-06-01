@@ -96,7 +96,7 @@
         this.data = superCoolAppDatabaseService.data;
         
         this.test = function(input){
-            console.log(input);
+            superCoolAppDatabaseService.getCommentsForFeature(input);
         }
              
     }]);
@@ -116,4 +116,5 @@
             });
         };
     }]);
+    
 })();

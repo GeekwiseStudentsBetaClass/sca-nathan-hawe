@@ -168,10 +168,9 @@ app.post('/api/addVote', function(req, res){
 
 /* Database stuff */
 var MongoClient = require('mongodb').MongoClient;
+var MongoId = require('mongodb').MongoId;
 var assert = require('assert');
-var ObjectId = require('mongodb').ObjectId;
 var url = 'mongodb://localhost:27017/test';
-
 var addVote = function(db, doc, callback){
     db.collection('votes').insertOne(doc, callback);
 }
@@ -190,12 +189,14 @@ var getFeatures = function(db, callback){
 }
 
 var addComment = function(db, doc, callback){
-    doc.dateCreated = new Date();
+    doc.dateCreated = new Date();   // Add date to the comment
+    doc.relatedFeature = require('mongodb').ObjectId(doc.relatedFeature);
     db.collection('comments').insertOne(doc, callback);
 }
 
 var getComments = function(db, query, callback){
     console.log(query);
+    query.relatedFeature = require('mongodb').ObjectId(query.relatedFeature);
     // Return all comments with the passed query
     db.collection('comments')
         .find(query)
