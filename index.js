@@ -45,6 +45,28 @@ app.get('/api/getFeatures', function(req, res){
     }); 
 });
 
+app.get('/api/getJoin', function(req, res){
+    // Query database for list of features
+    
+    /* INSERT ERROR CHECKING/HANDLING */
+    
+    MongoClient.connect(url, function(err, db){
+        assert.equal(null, err);
+        console.log("Connected correctly for join.");
+   
+        join(db, function(err, docs){
+            if(err){
+                console.log("There was an error: " + err);
+            }
+            else{
+                res.status(200).json(docs);
+            }
+            
+            db.close();
+        });
+    }); 
+});
+
 
 app.post('/api/addFeature', function(req, res){
    // Insert document into features collection
@@ -181,6 +203,22 @@ var getComments = function(db, query, callback){
         .toArray(callback);
 }
 
+var join = function(db, callback){
+    console.log('attempting join');
+    
+    db.collection('features').aggregate([
+        {$lookup:
+            {
+                from: "comments",
+                localField: "_id",
+                foreignField: "relatedFeature",
+                as: "featureComments"
+            }
+        }
+    ]).toArray(callback);
+    
+    
+}
 var insertDocument = function(db, callback){
     var collection = "features"
     db.collection(collection).insertMany([
@@ -195,123 +233,3 @@ var insertDocument = function(db, callback){
         callback();
     });
 };
-
-var findRestaurants = function(db, callback){
-    //var cursor = db.collection('restaurants').find( );    // Returns all records
-    var cursor = db.collection('restaurants').find({"restaurant_id": "41704620"});  // Query top level fields
-    //var cursor = db.collection('restaurants').find({"address.zipcode": "10075"});  // Query fields in an embedded document
-    //var cursor = db.collection('restaurants').find( { "grades.grade": "B"} );   // Query fields in an array
-    
-    /* QUERIES USING OPERATORS */
-    //var cursor = db.collection('restaurants').find( { "grades.score": { $gt: 30} });    // Greater Than $gt
-    //var cursor = db.collection('restaurants').find( { "grades.score": { $lt: 10} });    // Less Than $lt
-    
-    /* QUERIES WITH MULTIPLE CONDITIONS */
-    //var cursor = db.collection('restaurants').find( { "cuisine": "Italian", "address.zipcode": "10075" } ); // AND
-    //var cursor = db.collection('restaurants').find( { $or: [ { "cuisine": "Italian" }, { "address.zipcode": "10075" } ] }); //OR
-    
-    /* SORTED QUERIES */
-    //var cursor = db.collection('restaurants').find( ).sort( { "borough": 1, "address.zipcode": 1 } );   // Sort borough ascending and then zipcode ascending
-    
-    cursor.each(function(err, doc){
-        assert.equal(err, null);
-        if (doc != null){
-            console.dir(doc);
-        }else {
-            callback();
-        }
-    });
-};
-
-var updateRestaurants = function(db, callback) {
-    // Updates the first record
-    // db.collection('restaurants').updateOne(
-    //     { "name" : "Juni"},
-    //     {
-    //         $set: {"cuisine": "American (New)"},
-    //         $currentDate: { "lastModified": true }
-    //     }, function(err, results) {
-    //         console.log(results);
-    //         callback();
-    //     }
-    // );
-    
-    // Update an embedded field
-    // db.collection('restaurants').updateOne(
-    //     { "restaurant_id": "41156888" },
-    //     { $set: { "address.street": "East 31st Street" } },
-    //     function(err, results){
-    //         console.log(results);
-    //         callback();    
-    //     }
-    // );
-    
-    // Update many records
-    // db.collection('restaurants').updateMany(
-    //     { "address.zipcode": "10016", cuisine: "Other" },
-    //     {
-    //         $set: { cuisine: "Category To Be Determined" },
-    //         $currentDate: { "lastModified": true }
-    //     },
-    //     function(err, results){
-    //         console.log(results);
-    //         callback();
-    //     }
-    // );
-    
-    // Replace a record
-    // db.collection('restaurants').replaceOne(
-    //     { "restaurant_id" : "41704620" },
-    //     {
-    //         "name" : "Vella 2",
-    //         "address" : {
-    //             "coord" : [ -73.9557413, 40.7720266 ],
-    //             "building" : "1480",
-    //             "street" : "2 Avenue",
-    //             "zipcode" : "10075"
-    //         }
-    //     },
-    //     function(err, results){
-    //         console.log(results);
-    //         callback();
-    //     }
-    // );
-    
-    // Append to an embedded array with $push
-    db.collection('restaurants').updateOne(
-        { "restaurant_id": "41704620"},
-        {
-            $push: { "Comments": {"comment": "Comment B"}}
-        },
-        function(err, results){
-            console.log(results);
-            callback();
-        }
-    );
-};
-
-// Connect to the database and performs actions before closing
-// MongoClient.connect(url, function(err, db){
-//     assert.equal(null, err);
-//     console.log("Connected correctly to server.");
-    
-//     // insertDocument(db, function() {
-//     //     db.close();
-//     // })
-    
-//     // findRestaurants(db, function(){
-//     //     db.close();
-//     // });
-    
-//     // updateRestaurants(db, function(){
-//     //     db.close();
-//     // });
-    
-//     // updateRestaurants(db, function(){
-//     // });
-//     // findRestaurants(db, function(){
-//     //     db.close();
-//     // });
-// });
-
-
