@@ -7,7 +7,7 @@
     
     /* database service */
     myApp.service('superCoolAppDatabaseService', ['$http', function($http){
-        
+        // scope apply
         var me = this;
         
         this.data = {
@@ -21,8 +21,8 @@
         this.getFeatures = function(callback){
             console.log('attempting getFeatures')
             
-            $http.get('api/getFeatures').success(function(data){
-                
+            $http.get('api/getJoin').success(function(data){
+                console.log(data);
                 // Set me.features to the returned data
                 me.data.features = data;
                 
@@ -77,12 +77,12 @@
         }
         
         
-        // When created, get list of features and make the first feature selected
+        //When created, get list of features and make the first feature selected
         this.getFeatures(function(){
             if(me.data.features[0]){
                 console.log(me.data);
                 // Insert code here to set the object to selected
-                return me.getCommentsForFeature(0);
+                //return me.getCommentsForFeature(0);
             }
             return;
         });
@@ -94,20 +94,12 @@
         // Bind data
         var me = this;
         this.data = superCoolAppDatabaseService.data;
+        this.comment = {};
+        this.tab = 0;
         
         this.test = function(input){
-            superCoolAppDatabaseService.getCommentsForFeature(input);
+            me.tab = input;
         }
-             
-    }]);
-    
-    
-    /* Comments Controller */
-    myApp.controller('CommentsController', ['superCoolAppDatabaseService', function(superCoolAppDatabaseService){
-        var me = this;
-        // Bind data
-        this.data = superCoolAppDatabaseService.data;
-        this.comment = {};
         
         // Handle submissions
         this.submitComment = function(){
@@ -115,6 +107,23 @@
                 me.comment = {};
             });
         };
+             
     }]);
+    
+    
+    /* Comments Controller */
+    // myApp.controller('CommentsController', ['superCoolAppDatabaseService', function(superCoolAppDatabaseService){
+    //     var me = this;
+    //     // Bind data
+    //     this.data = superCoolAppDatabaseService.data;
+    //     this.comment = {};
+        
+    //     // Handle submissions
+    //     this.submitComment = function(){
+    //         return superCoolAppDatabaseService.addCommentForFeature(me.comment, function(){
+    //             me.comment = {};
+    //         });
+    //     };
+    // }]);
     
 })();

@@ -17,23 +17,23 @@
                 <div class="col-sm-4">
                     <ul class="nav nav-pills nav-stacked">
                         <li ng-repeat="feature in featureCtrl.data.features" ng-click="featureCtrl.test($index)">
-                            <!--<section class="well well-sm" ng-click="featureCtrl.selectFeature($index)">-->
-                            <a><h3>{{feature.name}}</h3>
-                            <p>{{feature.description}}</p></a>
-                            </section>
-                        </div>
+                            <a><h3>{{feature.name}}</h3></a>
+              
+                        
                     </ul>
                 </div>
                 <div class="col-sm-8">
-                    <div ng-controller="CommentsController as commentCtrl">
-                        <section class="well well-sm" ng-repeat="comment in commentCtrl.data.comments">
+                    <div ng-repeat="feature in featureCtrl.data.features" ng-show="featureCtrl.tab === $index">
+                        <h3>{{feature.name}}</h3>
+                        <p>{{feature.description}}</p>
+                        <section class="well well-sm" ng-repeat="comment in feature.featureComments">
                             <p>{{comment.commentText}}</p>
                             <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>
                         </section>
                     
-                        <form role="form" ng-submit="commentCtrl.submitComment()" novalidate>
-                            <input type="text" class="form-control" placeholder="Username..." ng-model="commentCtrl.comment.user" />
-                            <textarea class="form-control" ng-model="commentCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
+                        <form role="form" ng-submit="featureCtrl.submitComment()" novalidate>
+                            <input type="text" class="form-control" placeholder="Username..." ng-model="featureCtrl.comment.user" />
+                            <textarea class="form-control" ng-model="featureCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
                             <input type="submit" value="Submit" class="btn btn-default"/>
                         </form>
                     </div>
