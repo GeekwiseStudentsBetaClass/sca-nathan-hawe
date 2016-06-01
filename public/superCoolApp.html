@@ -26,14 +26,14 @@
                     <div ng-repeat="feature in featureCtrl.data.features" ng-show="featureCtrl.tab === $index">
                         <h3>{{feature.name}}</h3>
                         <p>{{feature.description}}</p>
-                        <div ng-click="featureCtrl.addUpVote()">Upvote!</div>
-                        <div ng-click="featureCtrl.addDownVote()">Downvote!</div>
+                        <div ng-click="featureCtrl.addUpVote(feature._id)">Upvote!</div>
+                        <div ng-click="featureCtrl.addDownVote(feature._id)">Downvote!</div>
                         <section class="well well-sm" ng-repeat="comment in feature.featureComments">
                             <p>{{comment.commentText}}</p>
                             <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>
                         </section>
                     
-                        <form role="form" ng-submit="featureCtrl.submitComment()" novalidate>
+                        <form role="form" ng-submit="featureCtrl.submitComment(feature._id)" novalidate>
                             <input type="text" class="form-control" placeholder="Username..." ng-model="featureCtrl.comment.user" />
                             <textarea class="form-control" ng-model="featureCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
                             <input type="submit" value="Submit" class="btn btn-default"/>

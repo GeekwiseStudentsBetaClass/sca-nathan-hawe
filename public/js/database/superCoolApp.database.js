@@ -35,35 +35,35 @@
         
         
         /* Define method to retrieve comments for passed feature */
-        this.getCommentsForFeature = function(featureIndex){
-            console.log('attempting getComments for ' + featureIndex);
+        // this.getCommentsForFeature = function(featureIndex){
+        //     console.log('attempting getComments for ' + featureIndex);
 
-            // Prepare JSON object to be sent with callback
-            if(!me.data.features[featureIndex]){
-                console.log('No feature at index ' + me.selectedIndex);
-                return;    
-            }
+        //     // Prepare JSON object to be sent with callback
+        //     if(!me.data.features[featureIndex]){
+        //         console.log('No feature at index ' + me.selectedIndex);
+        //         return;    
+        //     }
             
-            me.selected = me.data.features[featureIndex];
-            console.log(me.selected);
+        //     me.selected = me.data.features[featureIndex];
+        //     console.log(me.selected);
             
-            var query = {
-                relatedFeature:me.selected._id
-            };
+        //     var query = {
+        //         relatedFeature:me.selected._id
+        //     };
             
-            $http.post('api/getComments', query).success(function(data){
-                // Set me.comments to the returned data
-                me.data.comments = data;
-                console.log(data);
-            });
-        };
+        //     $http.post('api/getComments', query).success(function(data){
+        //         // Set me.comments to the returned data
+        //         me.data.comments = data;
+        //         console.log(data);
+        //     });
+        // };
         
         /* Define method to add comments */
-        this.addCommentForFeature = function(comment, callback){
+        this.addCommentForFeature = function(comment, relatedFeature, callback){
             console.log('attempting addCommentForFeature ' + comment + ' ' + me.selected);
             
             // !!!!!!!Ensure that the comment has the required fields!!!!!!
-            comment.relatedFeature = me.selected._id;
+            comment.relatedFeature = relatedFeature;
             
             // POST the comment
             $http.post('api/addComment', comment).success(function(data){
@@ -77,12 +77,12 @@
         }
         
         /* Define method to add votes */
-        this.addVoteForFeature = function(isUpVote, callback){
+        this.addVoteForFeature = function(isUpVote, relatedFeature, callback){
             console.log('attempting addVoteForFeature ' + isUpVote + ' ' + me.selected);
       
             // !!!!!!!Ensure that the vote has the required fields!!!!!!
             var vote = {
-                relatedFeature: me.selected._id,
+                relatedFeature: relatedFeature,
                 isUpVote: isUpVote
             };
             
@@ -100,11 +100,7 @@
         
         //When created, get list of features and make the first feature selected
         this.getFeatures(function(){
-            if(me.data.features[0]){
-                console.log(me.data);
-                // Insert code here to set the object to selected
-                //return me.getCommentsForFeature(0);
-            }
+           
             return;
         });
     }]);   
@@ -123,20 +119,20 @@
         }
         
         // Handle submissions
-        this.submitComment = function(){
-            return superCoolAppDatabaseService.addCommentForFeature(me.comment, function(){
+        this.submitComment = function(relatedFeature){
+            return superCoolAppDatabaseService.addCommentForFeature(me.comment, relatedFeature, function(){
                 me.comment = {};
             });
         };
         
         // Handle upvotes
-        this.addUpVote = function(){
-            return superCoolAppDatabaseService.addVoteForFeature(true)
+        this.addUpVote = function(relatedFeature){
+            return superCoolAppDatabaseService.addVoteForFeature(true, relatedFeature)
         };
         
         // Handle downvotes
-        this.addDownVote = function(){
-            return superCoolAppDatabaseService.addVoteForFeature(false)
+        this.addDownVote = function(relatedFeature){
+            return superCoolAppDatabaseService.addVoteForFeature(false, relatedFeature)
         };
              
     }]);

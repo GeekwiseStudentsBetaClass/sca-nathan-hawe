@@ -189,8 +189,8 @@ var getFeatures = function(db, callback){
 }
 
 var addComment = function(db, doc, callback){
-    doc.dateCreated = new Date();   // Add date to the comment
     doc.relatedFeature = require('mongodb').ObjectId(doc.relatedFeature);
+    doc.dateCreated = new Date();   // Add date to the comment
     db.collection('comments').insertOne(doc, callback);
 }
 
@@ -211,7 +211,7 @@ var addVote = function(db, doc, callback){
 }
 
 var join = function(db, callback){
-    var tempDb = db;
+    //var tempDb = db;
     console.log('attempting join');
     
     db.collection('features').aggregate([
