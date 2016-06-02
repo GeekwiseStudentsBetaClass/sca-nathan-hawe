@@ -20,8 +20,8 @@ app.listen(3000, function(){
     
 });
 
-/* API */
 
+/* API */
 app.get('/api/getFeatures', function(req, res){
     // Query database for list of features
     

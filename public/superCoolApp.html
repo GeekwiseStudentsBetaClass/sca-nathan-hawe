@@ -23,7 +23,7 @@
                     </ul>
                 </div>
                 <div class="col-sm-8">
-                    <div ng-repeat="feature in featureCtrl.data.features" ng-show="featureCtrl.tab === $index">
+                    <div ng-repeat="feature in featureCtrl.data.features track by $index" ng-show="featureCtrl.tab === $index">
                         <h3>{{feature.name}}</h3>
                         <p>{{feature.description}}</p>
                         <div class="progress" ng-show="{{(feature.downVotes + feature.upVotes) > 0}}">

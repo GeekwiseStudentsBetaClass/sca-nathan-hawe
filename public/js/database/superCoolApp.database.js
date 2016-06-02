@@ -6,33 +6,27 @@
     var myApp = angular.module('superCoolApp.database', []);
     
     /* database service */
-    myApp.service('superCoolAppDatabaseService', ['$http', function($http){
-        // scope apply
+    myApp.service('superCoolAppDatabaseService', ['$http', '$interval', function($http, $interval){
         var me = this;
+        var promise;
         
         this.data = {
             features: []
         }
         
-        this.selected = {}; // The currently selected feature;
-        
         /* Define method to retrieve features */
-        this.getFeatures = function(callback){
+        this.getFeatures = function(){
             console.log('attempting getFeatures')
             
             $http.get('api/getFeatures').success(function(data){
                 console.log(data);
                 // Set me.features to the returned data
                 me.data.features = data;
-                
-                // If a callback exists, run it.
-                if(!(callback === undefined)){
-                    return callback();
-                }
+
             });
         };
         
-        
+
         /* Define method to add comments */
         this.addCommentForFeature = function(comment, relatedFeature, callback){
             console.log('attempting addCommentForFeature ' + comment + ' ' + me.selected);
@@ -73,11 +67,9 @@
         }
         
         
-        //When created, get list of features and make the first feature selected
-        this.getFeatures(function(){
-           
-            return;
-        });
+        //When created, get list of features
+        this.getFeatures();
+        promise = $interval(me.getFeatures, 3000);
     }]);   
     
     
