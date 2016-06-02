@@ -9,20 +9,19 @@ app.use(express.static('public'));
 // User body-parser
 app.use(bodyParser.json());
 
-
 // Redirects root requests to superCoolApp.html
 app.get('/', function(req, res){
      res.redirect('/superCoolApp.html');
  });
 
-
 // Set server to listen to port 3000
 app.listen(3000, function(){
-    console.log('Example app listening on port 3000!');
+    console.log('Application listening on port 3000.');
     
 });
 
 /* API */
+
 app.get('/api/getFeatures', function(req, res){
     // Query database for list of features
     
@@ -30,31 +29,8 @@ app.get('/api/getFeatures', function(req, res){
     
     MongoClient.connect(url, function(err, db){
         assert.equal(null, err);
-        console.log("Connected correctly for getFeatures.");
    
         getFeatures(db, function(err, docs){
-            if(err){
-                console.log("There was an error: " + err);
-            }
-            else{
-                res.status(200).json(docs);
-            }
-            
-            db.close();
-        });
-    }); 
-});
-
-app.get('/api/getJoin', function(req, res){
-    // Query database for list of features
-    
-    /* INSERT ERROR CHECKING/HANDLING */
-    
-    MongoClient.connect(url, function(err, db){
-        assert.equal(null, err);
-        console.log("Connected correctly for join.");
-   
-        join(db, function(err, docs){
             if(err){
                 console.log("There was an error: " + err);
             }
@@ -75,39 +51,14 @@ app.post('/api/addFeature', function(req, res){
    
    MongoClient.connect(url, function(err, db){
         assert.equal(null, err);
-        console.log("Connected correctly for addFeature.");
-   
+           
         addFeature(db, req.body, function(err, results){
-            console.log("Err: " + err);
-            console.log("Results: " + results);
-            if(err){
-                console.log("There was an error: " + err);
-            }
-            else{
-                console.log(results);
-                res.status(201).send("success");
-            }
             
-            db.close();
-        });
-    });
-});
-
-app.post('/api/getComments', function(req, res){
-    // Query database for list of comments for feature passed
-    
-    /* INSERT ERROR CHECKING/HANDLING */
-    
-    MongoClient.connect(url, function(err, db){
-        assert.equal(null, err);
-        console.log("Connected correctly for getComments.");
-   
-        getComments(db, req.body, function(err, docs){
             if(err){
                 console.log("There was an error: " + err);
             }
             else{
-                res.status(200).json(docs);
+                res.status(201).send("success");
             }
             
             db.close();
@@ -126,7 +77,6 @@ app.post('/api/addComment', function(req, res){
    
         addComment(db, req.body, function(err, results){
             console.log("Err: " + err);
-            console.log("Results: " + results);
             if(err){
                 console.log("There was an error: " + err);
             }
@@ -148,11 +98,9 @@ app.post('/api/addVote', function(req, res){
    
    MongoClient.connect(url, function(err, db){
         assert.equal(null, err);
-        console.log("Connected correctly for addVote.");
    
         addVote(db, req.body, function(err, results){
-            console.log("Err: " + err);
-            console.log("Results: " + results);
+
             if(err){
                 console.log("There was an error: " + err);
             }
@@ -166,79 +114,90 @@ app.post('/api/addVote', function(req, res){
     });
 });
 
+
+
+
+
 /* Database stuff */
 var MongoClient = require('mongodb').MongoClient;
 var MongoId = require('mongodb').MongoId;
 var assert = require('assert');
 var url = 'mongodb://localhost:27017/test';
+
+
 var addVote = function(db, doc, callback){
     db.collection('votes').insertOne(doc, callback);
 }
 
-
 var addFeature = function(db, doc, callback){
+    // Ensure that doc has an array property for comments
+    doc.comments = [];
+    
     db.collection('features').insertOne(doc, callback);
 }
 
 var getFeatures = function(db, callback){
-    // Return all features sorted descending by score and ascending by name
-    db.collection('features')
-        .find( {"hidden": {$ne: true} })
-        .sort( {"score":-1,"name":1} )
-        .toArray(callback);
+ 
+    db.collection('features').find().sort({totalVotes: -1}).toArray(callback);
+    
 }
 
 var addComment = function(db, doc, callback){
     doc.relatedFeature = require('mongodb').ObjectId(doc.relatedFeature);
     doc.dateCreated = new Date();   // Add date to the comment
-    db.collection('comments').insertOne(doc, callback);
+    
+    db.collection('features').update(
+        {_id: doc.relatedFeature},
+        {
+            $push: {
+                comments: {
+                    $each: [doc],
+                    $slice: -100
+                }
+            }
+        },
+        null,
+        callback
+    );
 }
 
-var getComments = function(db, query, callback){
-    console.log(query);
-    query.relatedFeature = require('mongodb').ObjectId(query.relatedFeature);
-    // Return all comments with the passed query
-    db.collection('comments')
-        .find(query)
-        .sort( {"dateCreated":1} )
-        .toArray(callback);
-}
 
 var addVote = function(db, doc, callback){
     doc.dateCreated = new Date();   // Add date to the comment
     doc.relatedFeature = require('mongodb').ObjectId(doc.relatedFeature);
-    db.collection('votes').insertOne(doc, callback);
+    
+    db.collection('votes').insertOne(doc, function(err, results){
+        if(doc.isUpVote){
+            incrementCount(db, doc.relatedFeature, callback);
+        }
+        else{
+            decrementCount(db, doc.relatedFeature, callback);
+        }
+    });
 }
 
-var join = function(db, callback){
-    //var tempDb = db;
-    console.log('attempting join');
-    
-    db.collection('features').aggregate([
+var incrementCount = function(db, relatedFeature, callback){
+    db.collection('features').update(
         {
-            $lookup:    // Join to comments
-            {
-                from: "comments",
-                localField: "_id",
-                foreignField: "relatedFeature",
-                as: "featureComments"
-            }
-        }
-    ]).toArray(callback);
-    
-    
-}
-var insertDocument = function(db, callback){
-    var collection = "features"
-    db.collection(collection).insertMany([
-        {"name":"Login with Facebook","description":"Use Facebook's login service with Super Cool App."},
-        {"name":"Twitter Feed","description":"Display the active user's twitter feed."},
-        {"name":"Threaded Comments","description":"Use threaded comments in the comment system."},
-        {"name":"Today's Weather","description":"Display today's weather using the Weather.com API and the user's zipcode."},
-        {"name":"Profile Photos","description":"Allow users to upload profile photos."}
-    ], function(err, result){
-        assert.equal(err, null);
-        console.log("Inserted a document into the " + collection + " collection.");
-        callback();
-    });
+            _id:relatedFeature
+        },
+        {
+            $inc: { upVotes: 1, totalVotes: 1} 
+        },
+        null,
+        callback
+    )
+};
+
+var decrementCount = function(db, relatedFeature, callback){
+    db.collection('features').update(
+        {
+            _id:relatedFeature
+        },
+        {
+            $inc: { downVotes: 1, totalVotes: -1} 
+        },
+        null,
+        callback
+    )
 };

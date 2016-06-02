@@ -11,8 +11,7 @@
         var me = this;
         
         this.data = {
-            features: [],
-            comments: []
+            features: []
         }
         
         this.selected = {}; // The currently selected feature;
@@ -21,7 +20,7 @@
         this.getFeatures = function(callback){
             console.log('attempting getFeatures')
             
-            $http.get('api/getJoin').success(function(data){
+            $http.get('api/getFeatures').success(function(data){
                 console.log(data);
                 // Set me.features to the returned data
                 me.data.features = data;
@@ -33,30 +32,6 @@
             });
         };
         
-        
-        /* Define method to retrieve comments for passed feature */
-        // this.getCommentsForFeature = function(featureIndex){
-        //     console.log('attempting getComments for ' + featureIndex);
-
-        //     // Prepare JSON object to be sent with callback
-        //     if(!me.data.features[featureIndex]){
-        //         console.log('No feature at index ' + me.selectedIndex);
-        //         return;    
-        //     }
-            
-        //     me.selected = me.data.features[featureIndex];
-        //     console.log(me.selected);
-            
-        //     var query = {
-        //         relatedFeature:me.selected._id
-        //     };
-            
-        //     $http.post('api/getComments', query).success(function(data){
-        //         // Set me.comments to the returned data
-        //         me.data.comments = data;
-        //         console.log(data);
-        //     });
-        // };
         
         /* Define method to add comments */
         this.addCommentForFeature = function(comment, relatedFeature, callback){
@@ -114,12 +89,20 @@
         this.comment = {};
         this.tab = 0;
         
-        this.test = function(input){
+        this.changeTab = function(input){
             me.tab = input;
         }
         
         // Handle submissions
         this.submitComment = function(relatedFeature){
+            // Append comment to the comment array so that it appears before next update
+            if(me.data.features[me.tab].comments === undefined){
+                // There is no comments array yet
+                me.data.features[me.tab].comments = [];
+            }
+            me.data.features[me.tab].comments.push(me.comment);
+            
+            // Store comment in database
             return superCoolAppDatabaseService.addCommentForFeature(me.comment, relatedFeature, function(){
                 me.comment = {};
             });
@@ -127,30 +110,41 @@
         
         // Handle upvotes
         this.addUpVote = function(relatedFeature){
+            me.localVote(true);
             return superCoolAppDatabaseService.addVoteForFeature(true, relatedFeature)
         };
         
         // Handle downvotes
         this.addDownVote = function(relatedFeature){
+            me.localVote(false);
             return superCoolAppDatabaseService.addVoteForFeature(false, relatedFeature)
         };
+        
+        this.localVote = function(isUpVote){
+            var feature = me.data.features[me.tab];
+            
+            // Ensure that upVotes, downVotes and totalVotes exists
+            if(feature.upVotes === undefined){
+                feature.upvotes = 0;
+            }
+            if(feature.downVotes === undefined){
+                feature.downVotes = 0;
+            }
+            if(feature.totalVotes === undefined){
+                feature.totalVotes = feature.upVotes - feature.downVotes;
+            }
+            
+            // Process vote locally
+            if(isUpVote){
+                feature.upVotes++;
+                feature.totalVotes++;
+            }
+            else{
+                feature.downVotes++;
+                feature.totalVotes--;
+            }
+        }
              
     }]);
-    
-    
-    /* Comments Controller */
-    // myApp.controller('CommentsController', ['superCoolAppDatabaseService', function(superCoolAppDatabaseService){
-    //     var me = this;
-    //     // Bind data
-    //     this.data = superCoolAppDatabaseService.data;
-    //     this.comment = {};
-        
-    //     // Handle submissions
-    //     this.submitComment = function(){
-    //         return superCoolAppDatabaseService.addCommentForFeature(me.comment, function(){
-    //             me.comment = {};
-    //         });
-    //     };
-    // }]);
     
 })();
