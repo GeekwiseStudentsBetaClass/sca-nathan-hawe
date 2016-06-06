@@ -16,14 +16,14 @@
               <div ng-controller="FeaturesController as featureCtrl">
                 <div class="col-sm-4">
                     <ul class="nav nav-pills nav-stacked">
-                        <li ng-repeat="feature in featureCtrl.data.features" ng-click="featureCtrl.changeTab($index)">
+                        <li ng-repeat="feature in featureCtrl.data.features" ng-click="featureCtrl.changeTab(feature._id)">
                             <a><h3>{{feature.name}} ({{feature.totalVotes}})</h3></a>
               
                         
                     </ul>
                 </div>
                 <div class="col-sm-8">
-                    <div ng-repeat="feature in featureCtrl.data.features track by $index" ng-show="featureCtrl.tab === $index">
+                    <div ng-repeat="feature in featureCtrl.data.features track by $index" ng-show="featureCtrl.tab === feature._id">
                         <h3>{{feature.name}}</h3>
                         <p>{{feature.description}}</p>
                         <div class="progress" ng-show="{{(feature.downVotes + feature.upVotes) > 0}}">
@@ -32,8 +32,8 @@
                         </div>
                         
                         <ul class="list-inline">
-                            <li class="" ng-click="featureCtrl.addDownVote(feature._id)"><a href="#" class="btn btn-danger btn-md"><span class="glyphicon glyphicon-chevron-down"></span> Downvote!</a></li>
-                            <li class="" ng-click="featureCtrl.addUpVote(feature._id)"><a href="#" class="btn btn-success btn-md"><span class="glyphicon glyphicon-chevron-up"></span> Upvote!</a></li>
+                            <li class="" ng-click="featureCtrl.addDownVote(feature)"><a href="#" class="btn btn-danger btn-md"><span class="glyphicon glyphicon-chevron-down"></span> Downvote!</a></li>
+                            <li class="" ng-click="featureCtrl.addUpVote(feature)"><a href="#" class="btn btn-success btn-md"><span class="glyphicon glyphicon-chevron-up"></span> Upvote!</a></li>
                         </ul>
                                                 
                         <section class="well well-sm" ng-repeat="comment in feature.comments">
@@ -41,7 +41,7 @@
                             <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>
                         </section>
                     
-                        <form role="form" ng-submit="featureCtrl.submitComment(feature._id)" novalidate>
+                        <form role="form" ng-submit="featureCtrl.submitComment(feature)" novalidate>
                             <input type="text" class="form-control" placeholder="Username..." ng-model="featureCtrl.comment.user" />
                             <textarea class="form-control" ng-model="featureCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
                             <input type="submit" value="Submit" class="btn btn-default"/>

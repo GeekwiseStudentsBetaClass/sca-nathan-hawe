@@ -15,13 +15,19 @@
         }
         
         /* Define method to retrieve features */
-        this.getFeatures = function(){
+        this.getFeatures = function(callback){
             console.log('attempting getFeatures')
             
             $http.get('api/getFeatures').success(function(data){
                 console.log(data);
+                
                 // Set me.features to the returned data
                 me.data.features = data;
+                
+                // Perform callback if there is any
+                if(typeof callback === "function"){
+                    callback(data);
+                }
 
             });
         };
@@ -67,9 +73,11 @@
         }
         
         
-        //When created, get list of features
-        this.getFeatures();
-        promise = $interval(me.getFeatures, 3000);
+        this.start = function(callback){
+            this.getFeatures(callback);
+            promise = $interval(me.getFeatures, 3000);
+        };
+        
     }]);   
     
     
@@ -86,35 +94,34 @@
         }
         
         // Handle submissions
-        this.submitComment = function(relatedFeature){
+        this.submitComment = function(feature){
             // Append comment to the comment array so that it appears before next update
-            if(me.data.features[me.tab].comments === undefined){
+            if(feature.comments === undefined){
                 // There is no comments array yet
-                me.data.features[me.tab].comments = [];
+                feature.comments = [];
             }
-            me.data.features[me.tab].comments.push(me.comment);
+            feature.comments.push(me.comment);
             
             // Store comment in database
-            return superCoolAppDatabaseService.addCommentForFeature(me.comment, relatedFeature, function(){
+            return superCoolAppDatabaseService.addCommentForFeature(me.comment, feature._id, function(){
                 me.comment = {};
             });
         };
         
         // Handle upvotes
-        this.addUpVote = function(relatedFeature){
-            me.localVote(true);
-            return superCoolAppDatabaseService.addVoteForFeature(true, relatedFeature)
+        this.addUpVote = function(feature){
+            me.localVote(feature, true);
+            return superCoolAppDatabaseService.addVoteForFeature(true, feature._id)
         };
         
         // Handle downvotes
-        this.addDownVote = function(relatedFeature){
-            me.localVote(false);
-            return superCoolAppDatabaseService.addVoteForFeature(false, relatedFeature)
+        this.addDownVote = function(feature){
+            me.localVote(feature, false);
+            return superCoolAppDatabaseService.addVoteForFeature(false, feature._id)
         };
         
-        this.localVote = function(isUpVote){
-            var feature = me.data.features[me.tab];
-            
+        this.localVote = function(feature, isUpVote){
+                     
             // Ensure that upVotes, downVotes and totalVotes exists
             if(feature.upVotes === undefined){
                 feature.upvotes = 0;
@@ -136,6 +143,13 @@
                 feature.totalVotes--;
             }
         }
+        
+        
+        // Start the service's interval and get the first returned data to set
+        // the active panel
+        superCoolAppDatabaseService.start(function(data){
+            me.tab = data[0]._id;
+        });
              
     }]);
     
