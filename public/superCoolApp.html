@@ -86,7 +86,7 @@
                     <div ng-repeat="feature in featureCtrl.data.features track by $index" ng-show="featureCtrl.tab === feature._id">
                         <h3>{{feature.name}}</h3>
                         <p>{{feature.description}}</p>
-                        <div class="progress" ng-show="{{(feature.downVotes + feature.upVotes) > 0}}">
+                        <div class="progress" ng-show="(feature.downVotes + feature.upVotes) > 0">
                             <div class="progress-bar progress-bar-danger" style="width:{{feature.downVotes / (feature.upVotes + feature.downVotes) * 100}}%">{{feature.downVotes}}</div>
                             <div class="progress-bar progress-bar-success" style="width:{{feature.upVotes / (feature.upVotes + feature.downVotes) * 100}}%">{{feature.upVotes}}</div>
                         </div>
