@@ -1,3 +1,3 @@
 (function(){
-    var app = angular.module('superCoolApp', ['superCoolApp.database']);
+    var app = angular.module('superCoolApp', []);
 })();

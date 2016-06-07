@@ -20,3 +20,4 @@ mongoose.connection.on('disconnected', function(){
 // Include schemas/models
 require('./feature');
 require('./vote');
+require('./user');

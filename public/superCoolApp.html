@@ -4,14 +4,74 @@
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script type="text/javascript" src="js/angular.js"></script>
-        <script type="text/javascript" src="js/database/superCoolApp.database.js"></script>
         <script type="text/javascript" src="js/superCoolApp.js"></script>
+        <script type="text/javascript" src="js/authentication/authentication.js"></script>
+        <script type="text/javascript" src="js/authentication/registerController.js"></script>
+        <script type="text/javascript" src="js/authentication/loginController.js"></script>
+        <script type="text/javascript" src="js/authentication/userController.js"></script>
+        <script type="text/javascript" src="js/database/superCoolApp.database.js"></script>
         <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
     </head>
     
     <body>
     <div class="container">
         <div class="jumbotron"><h1>Super Cool App</h1><p>The superest cool app!</p></div>
+
+        <div class="row">
+            <div ng-controller="UserController as userCtrl" ng-show="userCtrl.isLoggedIn">
+                <a href="#" ng-click="userCtrl.logout()">Hi, {{userCtrl.currentUser.username}}!  Click here to logout</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Registration -->
+            <div class="col col-sm-6" ng-controller="RegistrationController as registrationCtrl" ng-show="!registrationCtrl.isLoggedIn">
+                <form ng-submit="registrationCtrl.onSubmit()">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name..." ng-model="registrationCtrl.credentials.name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email..." ng-model="registrationCtrl.credentials.email">
+                    </div>
+                    <div class="form-group">
+                        <label for="zipcode">Zipcode</label>
+                        <input type="text" class="form-control" id="zipcode" placeholder="Enter your zipcode..." ng-model="registrationCtrl.credentials.zipcode">
+                    </div>
+                    <div class="form-group">
+                        <label for="twitter">Twitter Handle</label>
+                        <input type="text" class="form-control" id="twitter" placeholder="Enter your Twitter handle..." ng-model="registrationCtrl.credentials.twitter">
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter your username..." ng-model="registrationCtrl.credentials.username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Enter your password..." ng-model="registrationCtrl.credentials.password">
+                    </div>
+                    <input type="submit" class="btn btn-default" value="Register!">
+                </form>
+            </div>
+
+            <!-- Login -->
+            <div class="col col-sm-6" ng-controller="LoginController as loginCtrl" ng-show="!loginCtrl.isLoggedIn">
+                <form ng-submit="loginCtrl.onSubmit()">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" placeholder="Enter your username..." ng-model="loginCtrl.credentials.username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" placeholder="Enter password..." ng-model="loginCtrl.credentials.password">
+                    </div>
+                    <input type="submit" class="btn btn-default" value="Login">
+                </form>
+            </div>
+        </div>
+
+        <!-- Features -->
             <div class="row">
               <div ng-controller="FeaturesController as featureCtrl">
                 <div class="col-sm-4">
@@ -31,18 +91,19 @@
                             <div class="progress-bar progress-bar-success" style="width:{{feature.upVotes / (feature.upVotes + feature.downVotes) * 100}}%">{{feature.upVotes}}</div>
                         </div>
                         
-                        <ul class="list-inline">
-                            <li class="" ng-click="featureCtrl.addDownVote(feature)"><a href="#" class="btn btn-danger btn-md"><span class="glyphicon glyphicon-chevron-down"></span> Downvote!</a></li>
-                            <li class="" ng-click="featureCtrl.addUpVote(feature)"><a href="#" class="btn btn-success btn-md"><span class="glyphicon glyphicon-chevron-up"></span> Upvote!</a></li>
+                        <ul class="list-inline" ng-show="featureCtrl.isLoggedIn">
+                            <li class="" ng-click="featureCtrl.addDownVote(feature)"><button type="button" class="btn btn-danger btn-md"><span class="glyphicon glyphicon-chevron-down"></span> Downvote!</button></li>
+                            <li class="" ng-click="featureCtrl.addUpVote(feature)"><button type="button" class="btn btn-success btn-md"><span class="glyphicon glyphicon-chevron-up"></span> Upvote!</a></li>
                         </ul>
+
                                                 
                         <section class="well well-sm" ng-repeat="comment in feature.comments">
                             <p>{{comment.commentText}}</p>
                             <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>
                         </section>
                     
-                        <form role="form" ng-submit="featureCtrl.submitComment(feature)" novalidate>
-                            <input type="text" class="form-control" placeholder="Username..." ng-model="featureCtrl.comment.user" />
+                        <form role="form" ng-submit="featureCtrl.submitComment(feature)" novalidate ng-show="featureCtrl.isLoggedIn">
+                            <!--input type="text" class="form-control" placeholder="Username..." ng-model="featureCtrl.comment.user" /-->
                             <textarea class="form-control" ng-model="featureCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
                             <input type="submit" value="Submit" class="btn btn-default"/>
                         </form>

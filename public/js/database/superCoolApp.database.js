@@ -3,10 +3,10 @@
     and two modules for features and comments.
 */
 (function(){
-    var myApp = angular.module('superCoolApp.database', []);
+    var myApp = angular.module('superCoolApp');
     
     /* database service */
-    myApp.service('superCoolAppDatabaseService', ['$http', '$interval', function($http, $interval){
+    myApp.service('superCoolAppDatabaseService', ['$http', '$interval', 'authentication', function($http, $interval, authentication){
         var me = this;
         var promise;
         
@@ -16,10 +16,10 @@
         
         /* Define method to retrieve features */
         this.getFeatures = function(callback){
-            console.log('attempting getFeatures')
+            //console.log('attempting getFeatures')
             
             $http.get('api/getFeatures').success(function(data){
-                console.log(data);
+                //console.log(data);
                 
                 // Set me.features to the returned data
                 me.data.features = data;
@@ -35,26 +35,35 @@
 
         /* Define method to add comments */
         this.addCommentForFeature = function(comment, relatedFeature, callback){
-            console.log('attempting addCommentForFeature ' + comment + ' ' + me.selected);
-            
             // !!!!!!!Ensure that the comment has the required fields!!!!!!
             comment.relatedFeature = relatedFeature;
             
             // POST the comment
-            $http.post('api/addComment', comment).success(function(data){
-               console.log('api/addComment response: ' + data);
-               
-               // If a callback exists, run it
-               if(!(callback===undefined)){
-                   return callback();
-               }
-            });
+            $http({
+                method: 'POST',
+                url: 'api/addComment',
+                headers: {
+                    Authorization: 'Bearer ' + authentication.getToken()
+                },
+                data: comment
+                })
+                .then(
+                    function(data){
+                        // If a callback exists, run it
+                        if(!(callback===undefined)){
+                            return callback();
+                        }
+                    },
+                    function(response){
+                        if(response.statusText){
+                            alert('Error: ' + response.statusText);
+                        }
+                });
+                           
         }
         
         /* Define method to add votes */
         this.addVoteForFeature = function(isUpVote, relatedFeature, callback){
-            console.log('attempting addVoteForFeature ' + isUpVote + ' ' + me.selected);
-      
             // !!!!!!!Ensure that the vote has the required fields!!!!!!
             var vote = {
                 relatedFeature: relatedFeature,
@@ -62,14 +71,26 @@
             };
             
             // POST the comment
-            $http.post('api/addVote', vote).success(function(data){
-               console.log('api/addVote response: ' + data);
-               
-               // If a callback exists, run it
-               if(!(callback===undefined)){
-                   return callback();
-               }
-            });
+            $http({
+                    method: 'POST',
+                    url: 'api/addVote',
+                    headers: {
+                        Authorization: 'Bearer ' + authentication.getToken()
+                    },
+                    data: vote
+                })
+                .then(
+                    function(data){
+                        // If a callback exists, run it
+                        if(!(callback===undefined)){
+                            return callback();
+                        }
+                    },
+                    function(response){
+                        if(response.statusText){
+                            alert('Error: ' + response.statusText);
+                        }
+                    });
         }
         
         
@@ -82,12 +103,15 @@
     
     
     /* Features Controller */
-    myApp.controller('FeaturesController', ['superCoolAppDatabaseService', function(superCoolAppDatabaseService){
+    myApp.controller('FeaturesController', ['superCoolAppDatabaseService', 'authentication', function(superCoolAppDatabaseService, authentication){
         // Bind data
         var me = this;
         this.data = superCoolAppDatabaseService.data;
         this.comment = {};
         this.tab = 0;
+
+        this.isLoggedIn = authentication.isLoggedIn();
+        this.currentUser = authentication.currentUser();
         
         this.changeTab = function(input){
             me.tab = input;
