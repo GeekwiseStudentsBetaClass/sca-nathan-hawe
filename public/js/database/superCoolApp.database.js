@@ -16,20 +16,21 @@
         
         /* Define method to retrieve features */
         this.getFeatures = function(callback){
-            //console.log('attempting getFeatures')
             
-            $http.get('api/getFeatures').success(function(data){
-                //console.log(data);
-                
-                // Set me.features to the returned data
-                me.data.features = data;
-                
-                // Perform callback if there is any
-                if(typeof callback === "function"){
-                    callback(data);
+            $http.get('/api/getFeatures').then(
+                function(data){ // SUCCESS
+                    // Set me.features to the returned data
+                    me.data.features = data;
+                    
+                    // Perform callback if there is any
+                    if(typeof callback === "function"){
+                        callback(data);
+                    }
+                },
+                function(data){ // FAILURE
+                    if(data.data.message){ alert(data.data.message); }
                 }
-
-            });
+            );
         };
         
 
@@ -41,23 +42,21 @@
             // POST the comment
             $http({
                 method: 'POST',
-                url: 'api/addComment',
+                url: '/api/addComment',
                 headers: {
                     Authorization: 'Bearer ' + authentication.getToken()
                 },
                 data: comment
                 })
                 .then(
-                    function(data){
+                    function(data){ // SUCCESS
                         // If a callback exists, run it
                         if(!(callback===undefined)){
                             return callback();
                         }
                     },
-                    function(response){
-                        if(response.statusText){
-                            alert('Error: ' + response.statusText);
-                        }
+                    function(data){ // FAILURE
+                        if(data.data.message){ alert(data.data.message); }
                 });
                            
         }
@@ -73,23 +72,21 @@
             // POST the comment
             $http({
                     method: 'POST',
-                    url: 'api/addVote',
+                    url: '/api/addVote',
                     headers: {
                         Authorization: 'Bearer ' + authentication.getToken()
                     },
                     data: vote
                 })
                 .then(
-                    function(data){
+                    function(data){ //SUCCESS
                         // If a callback exists, run it
                         if(!(callback===undefined)){
                             return callback();
                         }
                     },
-                    function(response){
-                        if(response.statusText){
-                            alert('Error: ' + response.statusText);
-                        }
+                    function(data){ // FAILURE
+                        if(data.data.message){ alert(data.data.message); }
                     });
         }
         

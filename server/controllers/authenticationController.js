@@ -19,34 +19,35 @@ module.exports.register = function(req, res){
 
     // Save the new User into the collection
     user.save(function(err) {
-        if(!err){
+        if(!err){   // Success
             var token;
             token = user.generateJWT();
             res.status(200);
             res.json({
                 "token" : token
             });
-        } else{
-            res.status(400).json(err);
+        } else{     // Failure
+            console.log(err);
+            res.status(400).json({
+                'message': err.name + ': ' + err.message
+            });
             return;
         }
     });
 };
 
-// Method for logging an existing user input
+// Method for logging an existing user in
 module.exports.login = function(req, res){
-    console.log('login called');
-    console.log(req.body);
+    
     passport.authenticate('local', function(err, user, info){
         var token;
-        console.log(err);
-        console.log(user);
-        console.log(info);
 
         // catch errors
         if (err){
             console.log(err);
-            res.status(404).json(err);
+            res.status(400).json({
+                'message': err.name + ': ' + err.message
+            });
             return;
         }
 
@@ -60,8 +61,9 @@ module.exports.login = function(req, res){
         }
         else{
             // User was not found
-            console.log('User not found');
-            res.status(401).json(info);
+            res.status(401).json({
+                'message': 'Username and/or password incorrect.'
+            });
         }
     })(req, res);
 };
