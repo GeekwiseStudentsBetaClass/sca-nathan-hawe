@@ -63,7 +63,7 @@
                 function(data){ // Success
                     console.log(data);
                     self.saveToken(data.data.token);
-                    window.location.reload();
+                    window.location = "/"
                 },
                 function(data){ // Failure
                     if(data.data.message){ alert(data.data.message); }
@@ -76,7 +76,7 @@
             return $http.post('/api/login', user).then(
                 function(data){ // Success
                     self.saveToken(data.data.token);    // Cache the token
-                    window.location.reload();           // Reload window
+                   window.location = "/"           // Reload window
                 },
                 function(data){ // Failure
                     if(data.data.message){ alert(data.data.message); }
