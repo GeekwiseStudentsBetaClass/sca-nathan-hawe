@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="superCoolApp">
     <head>
+        <title>SCA</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script type="text/javascript" src="js/angular.js"></script>
@@ -15,14 +16,14 @@
     </head>
     
     <body>
-        <nav class="navbar navbar-inverse" role="navigation" ng-controller="UserController as userCtrl">
+        <nav class="navbar navbar-dark" role="navigation" ng-controller="UserController as userCtrl">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Super Cool App</a>
             </div>
             <ul class="nav navbar-nav">
                 <li><a ui-sref="home">Home</a></li>
                 <li><a ui-sref="login" ng-show="!userCtrl.isLoggedIn">Login</a></li>
-                <li><a href="#" ng-show="userCtrl.isLoggedIn" ng-click="userCtrl.logout()">Logout</a></li>
+                <li><a href="" ng-show="userCtrl.isLoggedIn" ng-click="userCtrl.logout()">Logout</a></li>
                 <li><a ui-sref="admin" ng-show="userCtrl.isLoggedIn && userCtrl.isAdmin">Admin</a></li>
             </ul>
         </nav>
@@ -30,7 +31,7 @@
         <div class="container">
             <div class="row">
                 <div  ng-show="userCtrl.isLoggedIn">
-                    <a href="#" ng-click="userCtrl.logout()">Hi, {{userCtrl.currentUser.username}}!  Click here to logout</a>
+                    <a href="" ng-click="userCtrl.logout()">Hi, {{userCtrl.currentUser.username}}!  Click here to logout</a>
                 </div>
             </div>
             
