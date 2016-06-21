@@ -25,9 +25,9 @@ var routesAPI = require('./server/routes/api');     // Routes needs to be brough
 app.use(express.static('public'));
 
 // Redirect root requests to superCoolApp.html
-app.get('/', function(req, res){
-     res.redirect('/superCoolApp.html');
- });
+// app.get('/', function(req, res){
+//      res.redirect('/superCoolApp.html');
+//  });
 
 // Catch API requests
 app.use('/api', routesAPI);
