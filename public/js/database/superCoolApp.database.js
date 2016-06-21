@@ -20,7 +20,7 @@
             $http.get('/api/getFeatures').then(
                 function(data){ // SUCCESS
                     // Set me.features to the returned data
-                    me.data.features = data;
+                    me.data.features = data.data;
                     
                     // Perform callback if there is any
                     if(typeof callback === "function"){
@@ -169,7 +169,8 @@
         // Start the service's interval and get the first returned data to set
         // the active panel
         superCoolAppDatabaseService.start(function(data){
-            me.tab = data[0]._id;
+            console.log(data);
+            me.tab = data.data[0]._id;
         });
              
     }]);
