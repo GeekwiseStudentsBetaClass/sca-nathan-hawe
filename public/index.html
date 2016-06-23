@@ -27,7 +27,7 @@
                     <li><a ui-sref="admin" ng-show="userCtrl.isLoggedIn && userCtrl.isAdmin">Admin</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a ui-sref="login" ng-show="!userCtrl.isLoggedIn"><span class="glyphicon glyphicon-user"></span>&nbsp;Sign Up</a></li>
+                    <li><a ui-sref="register" ng-show="!userCtrl.isLoggedIn"><span class="glyphicon glyphicon-user"></span>&nbsp;Sign Up</a></li>
                     <li><a ui-sref="login" ng-show="!userCtrl.isLoggedIn"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Login</a></li>
                     <li><a href="" ng-show="userCtrl.isLoggedIn" ng-click="userCtrl.logout()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Logout</a></li>
                 </ul>

@@ -1,4 +1,8 @@
 <!-- login.register.html -->
+<div ng-show="userCtrl.isLoggedIn">
+    You are already logged in as {{userCtrl.currentUser.username}}.  To change users or register as a new user, please <a href="" ng-click="userCtrl.logout()">logout</a> first.
+</div>
+
 <div class="col col-sm-8 col-sm-offset-2" ng-show="!registrationCtrl.isLoggedIn">
     <form ng-submit="registrationCtrl.onSubmit()">
         <div class="form-group">
