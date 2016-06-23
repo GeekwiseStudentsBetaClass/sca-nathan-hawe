@@ -17,19 +17,23 @@
     </head>
     
     <body ng-controller="UserController as userCtrl">
-        <nav class="navbar navbar-dark" role="navigation">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Super Cool App</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li><a ui-sref="home">Home</a></li>
-                <li><a ui-sref="login" ng-show="!userCtrl.isLoggedIn">Login</a></li>
-                <li><a href="" ng-show="userCtrl.isLoggedIn" ng-click="userCtrl.logout()">Logout</a></li>
-                <li><a ui-sref="admin" ng-show="userCtrl.isLoggedIn && userCtrl.isAdmin">Admin</a></li>
-            </ul>
-        </nav>
+        <div class="container col col-sm-12">
+            <nav class="navbar navbar-dark" role="navigation">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Super Cool App</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a ui-sref="home">Home</a></li>
+                    <li><a ui-sref="admin" ng-show="userCtrl.isLoggedIn && userCtrl.isAdmin">Admin</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a ui-sref="login" ng-show="!userCtrl.isLoggedIn"><span class="glyphicon glyphicon-user"></span>&nbsp;Sign Up</a></li>
+                    <li><a ui-sref="login" ng-show="!userCtrl.isLoggedIn"><span class="glyphicon glyphicon-log-in"></span>&nbsp;Login</a></li>
+                    <li><a href="" ng-show="userCtrl.isLoggedIn" ng-click="userCtrl.logout()"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Logout</a></li>
+                </ul>
+            </nav>
 
-        <div class="container">
+        
             <div ui-view></div>
         </div>
     </body>
