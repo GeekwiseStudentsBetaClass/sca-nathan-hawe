@@ -15,8 +15,8 @@
         <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
     </head>
     
-    <body>
-        <nav class="navbar navbar-dark" role="navigation" ng-controller="UserController as userCtrl">
+    <body ng-controller="UserController as userCtrl">
+        <nav class="navbar navbar-dark" role="navigation">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Super Cool App</a>
             </div>
@@ -29,12 +29,6 @@
         </nav>
 
         <div class="container">
-            <div class="row">
-                <div  ng-show="userCtrl.isLoggedIn">
-                    <a href="" ng-click="userCtrl.logout()">Hi, {{userCtrl.currentUser.username}}!  Click here to logout</a>
-                </div>
-            </div>
-            
             <div ui-view></div>
         </div>
     </body>

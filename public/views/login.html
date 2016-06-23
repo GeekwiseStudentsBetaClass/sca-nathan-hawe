@@ -1,48 +1,13 @@
 <!-- login.html -->
-<div class="row">
-            <!-- Registration -->
-            <div class="col col-sm-6" ng-controller="RegistrationController as registrationCtrl" ng-show="!registrationCtrl.isLoggedIn">
-                <form ng-submit="registrationCtrl.onSubmit()">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Enter your name..." ng-model="registrationCtrl.credentials.name">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email..." ng-model="registrationCtrl.credentials.email">
-                    </div>
-                    <div class="form-group">
-                        <label for="zipcode">Zipcode</label>
-                        <input type="text" class="form-control" id="zipcode" placeholder="Enter your zipcode..." ng-model="registrationCtrl.credentials.zipcode">
-                    </div>
-                    <div class="form-group">
-                        <label for="twitter">Twitter Handle</label>
-                        <input type="text" class="form-control" id="twitter" placeholder="Enter your Twitter handle..." ng-model="registrationCtrl.credentials.twitter">
-                    </div>
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" id="username" placeholder="Enter your username..." ng-model="registrationCtrl.credentials.username">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your password..." ng-model="registrationCtrl.credentials.password">
-                    </div>
-                    <input type="submit" class="btn btn-default" value="Register!">
-                </form>
-            </div>
 
-            <!-- Login -->
-            <div class="col col-sm-6" ng-controller="LoginController as loginCtrl" ng-show="!loginCtrl.isLoggedIn">
-                <form ng-submit="loginCtrl.onSubmit()">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" placeholder="Enter your username..." ng-model="loginCtrl.credentials.username">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" placeholder="Enter password..." ng-model="loginCtrl.credentials.password">
-                    </div>
-                    <input type="submit" class="btn btn-default" value="Login">
-                </form>
-            </div>
-        </div>
+<div ng-show="userCtrl.isLoggedIn">
+    You are already logged in as {{userCtrl.currentUser.username}}.  To change users or register as a new user, please <a href="" ng-click="userCtrl.logout()">logout</a> first.
+</div>
+
+<div ng-show="!userCtrl.isLoggedIn">
+    <a href="" class="btn btn-med" ui-sref="login.go">Login</a>
+    <a href="" class="btn btn-med" ui-sref="login.register">Register</a>
+    <div class="row">
+        <div ui-view></div>
+    </div>
+</div>
