@@ -27,10 +27,6 @@ module.exports.getFeatures = function(req, res) {
 
 // Add a comment to a feature
 module.exports.addComment = function(req, res){
-    console.log('addComment called')
-    console.log(req.payload);
-    console.log
-
     // Return an error if there is no user
     if(!req.payload._id){
         res.status(401).json({
