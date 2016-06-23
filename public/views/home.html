@@ -8,8 +8,9 @@
         <!-- Left Column: Features -->
         <div class="col-sm-4">
             <ul class="nav nav-pills nav-stacked">
-                <li ng-repeat="feature in featureCtrl.data.features" ng-click="featureCtrl.changeTab(feature._id)" ng-class="((featureCtrl.tab === feature._id)?('active'):(''))">
-                    <a href=""><h3>{{feature.name}} ({{feature.totalVotes}})</h3></a>
+                <li class="text-center" ng-repeat="feature in featureCtrl.data.features" ng-click="featureCtrl.changeTab(feature._id)" ng-class="((featureCtrl.tab === feature._id)?('active'):(''))">
+                    <a href=""><h3>{{feature.name}} <span class="badge">{{feature.totalVotes}}</h3></span></a>
+                    
                 </li>
             </ul>
         </div>
@@ -17,24 +18,24 @@
         <!-- Right Column: Comments/Votes -->
         <div class="col-sm-8">
             <div ng-repeat="feature in featureCtrl.data.features track by $index" ng-show="featureCtrl.tab === feature._id">
-                <h3>{{feature.name}}</h3>
+                <h1 class="text-center">{{feature.name}}</h1>
                 <p>{{feature.description}}</p>
-                
+                <hr/>
                 <div class="progress" ng-show="(feature.downVotes + feature.upVotes) > 0">
                     <div class="progress-bar progress-bar-danger" style="width:{{feature.downVotes / (feature.upVotes + feature.downVotes) * 100}}%">{{feature.downVotes}}</div>
                     <div class="progress-bar progress-bar-success" style="width:{{feature.upVotes / (feature.upVotes + feature.downVotes) * 100}}%">{{feature.upVotes}}</div>
                 </div>
                         
-                <ul class="list-inline" ng-show="featureCtrl.isLoggedIn">
-                    <li class="" ng-click="featureCtrl.addDownVote(feature)"><button type="button" class="btn btn-danger btn-md"><span class="glyphicon glyphicon-chevron-down"></span> Downvote!</button></li>
-                    <li class="" ng-click="featureCtrl.addUpVote(feature)"><button type="button" class="btn btn-success btn-md"><span class="glyphicon glyphicon-chevron-up"></span> Upvote!</a></li>
+                <ul class="list-inline text-center" ng-show="featureCtrl.isLoggedIn">
+                    <li class="" ng-click="featureCtrl.addDownVote(feature)"><button type="button" class="btn btn-danger btn-md"><span class="glyphicon glyphicon-thumbs-down"></span> Downvote!</button></li>
+                    <li class="" ng-click="featureCtrl.addUpVote(feature)"><button type="button" class="btn btn-success btn-md"><span class="glyphicon glyphicon-thumbs-up"></span> Upvote!</a></li>
                 </ul>
-
+                <hr/>
                 <section class="well well-sm" ng-repeat="comment in feature.comments">
                     <p>{{comment.commentText}}</p>
                     <p>-{{comment.user}} on {{comment.dateCreated | date : 'medium'}}</p>
                 </section>
-                    
+                
                 <form role="form" ng-submit="featureCtrl.submitComment(feature)" novalidate ng-show="featureCtrl.isLoggedIn">
                     <textarea class="form-control" ng-model="featureCtrl.comment.commentText" placeholder="Comment text..." ></textarea>
                     <input type="submit" value="Submit" class="btn btn-default"/>
