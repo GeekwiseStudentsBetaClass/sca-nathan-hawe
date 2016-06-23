@@ -24,5 +24,10 @@
                 templateUrl: 'views/settings.html',
                 controller: 'SettingsController as settingsCtrl'
             })
+            .state('admin', {
+                url: '/admin',
+                templateUrl: 'views/admin.html',
+                controller: 'AdminController as adminCtrl'
+            })
     })
 })();

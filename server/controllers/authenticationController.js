@@ -4,8 +4,6 @@ var User = mongoose.model('User');
 
 // Method for registering new users
 module.exports.register = function(req, res){
-    /* Add input validation */
-
     // Create a new User document with the values passed
     var user = new User();
     user.username = req.body.username;
@@ -17,23 +15,34 @@ module.exports.register = function(req, res){
     // Generate the hash
     user.setPassword(req.body.password);
 
-    // Save the new User into the collection
-    user.save(function(err) {
-        if(!err){   // Success
-            var token;
-            token = user.generateJWT();
-            res.status(200);
-            res.json({
-                "token" : token
+    // Check if this is the first user added to the database
+    User
+        .count('', function(err, count){
+            if(!err && count==0){
+                user.admin = true;
+            }else{
+                user.admin = false;
+            }
+        })
+        .then(function(){    
+            // Save the new User into the collection
+            user.save(function(err) {
+                if(!err){   // Success
+                    var token;
+                    token = user.generateJWT();
+                    res.status(200);
+                    res.json({
+                        "token" : token
+                    });
+                } else{     // Failure
+                    console.log(err);
+                    res.status(400).json({
+                        'message': err.name + ': ' + err.message
+                    });
+                    return;
+                }
             });
-        } else{     // Failure
-            console.log(err);
-            res.status(400).json({
-                'message': err.name + ': ' + err.message
-            });
-            return;
-        }
-    });
+        });
 };
 
 // Method for logging an existing user in

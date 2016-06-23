@@ -52,7 +52,8 @@
                     email: payload.email,
                     name: payload.name,
                     zipcode: payload.zipcode,
-                    twitter: payload.twitter
+                    twitter: payload.twitter,
+                    admin: payload.admin
                 };
             }
             else{

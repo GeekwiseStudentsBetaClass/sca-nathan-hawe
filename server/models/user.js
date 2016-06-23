@@ -55,6 +55,7 @@ userSchema.methods.generateJWT = function(){
         name: this.name,
         zipcode: this.zipcode,
         twitter: this.twitter,
+        admin: this.admin,
         exp: parseInt(expiry.getTime()/1000)
     }, "MY_SECRET");  // Replace MY_SECRET
 }

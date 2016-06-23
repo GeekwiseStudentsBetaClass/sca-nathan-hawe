@@ -1,0 +1,11 @@
+<!-- admin.html -->
+<div>
+    <div ng-show="!(userCtrl.isLoggedIn && userCtrl.currentUser.admin)">
+        You must be logged on to see this page.
+    </div>
+
+    <div ng-show="(userCtrl.isLoggedIn && userCtrl.currentUser.admin)">
+        Admin page!
+    </div>
+
+</div>
