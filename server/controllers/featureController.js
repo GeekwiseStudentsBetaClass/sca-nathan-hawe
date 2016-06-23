@@ -42,7 +42,9 @@ module.exports.addComment = function(req, res){
 
     // This requires a featureId to be passed in the request body.
     if(!req.body.relatedFeature){
-        res.status(404).send('Missing required field');
+        res.status(404).json({
+            'message': 'Missing required field'
+        });
         return;
     }    
     
@@ -54,36 +56,43 @@ module.exports.addComment = function(req, res){
     };
     
     // Find the related feature and save the comment to its comments array
-    console.log('Looking for feature ' + req.body.relatedFeature);
     Feature
         .findById(req.body.relatedFeature)
         .then(function(feature){
             // Save the comment to the embedded array
             feature.comments.push(comment);
-            feature.save(function(){
-                res.status(201).send("success");
+            feature.save(function(err){
+                if(!err){   // Success
+                    res.status(201).json({
+                        'message': 'success'
+                    });
+                }else{     // Failure
+                    console.log(err);
+                    res.status(400).json({
+                        'message': err.name + ': ' + err.message
+                    });
+                    return;
+                }
             });
     });
 }
 
 // Add a vote
 module.exports.addVote = function(req, res){
-    console.log('addVote called')
-    console.log(req.payload);
-    console.log
 
     // Return an error if there is no user
     if(!req.payload._id){
         res.status(401).json({
             'message': 'UnauthorizedError: unable to add vote'
         });
-
         return;
     }
 
     // This requires a relatedFeature and isUpVote boolean in the request body
     if(!req.body.relatedFeature || req.body.isUpVote === undefined){
-        res.status(404).send('Missing required field');
+        res.status(404).json({
+            'message': 'Missing required field'
+        });
         return;
     }
     
@@ -95,11 +104,11 @@ module.exports.addVote = function(req, res){
 
     // Count the number of records for this feature and user
     Vote.count({relatedFeature: vote.relatedFeature, relatedUser: vote.relatedUser}, function(err, count){
-        console.log(err);
-        console.log(count);
         // The user can only vote once per feature
         if(count!=0){
-            res.status(404).send('User has already voted');
+            res.status(404).json({
+            'message': 'This user has already voted on this feature.'
+        });
             return;
         }
 
@@ -120,11 +129,16 @@ module.exports.addVote = function(req, res){
                 // Create the separate vote record in the Votes collection
                 vote.save(function(err, response){
                     if(!err){
-                        res.status(201).send("success");
+                        res.status(201).json({
+                            'message': 'success'
+                        });
+                    } else {     // Failure
+                        console.log(err);
+                        res.status(400).json({
+                            'message': err.name + ': ' + err.message
+                        });
+                        return;
                     }
-                    else{
-                        throw err;
-                    } 
                 });
             });
         });

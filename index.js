@@ -14,20 +14,10 @@ require('./server/models/db');
 // Initialize passport after the models but before routesAPI
 require('./server/config/passport');
 
-// app.use(session({ secret: "secret" }));
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-
 var routesAPI = require('./server/routes/api');     // Routes needs to be brought in after the models.
 
 // Allows static pages to be served from the public folder
 app.use(express.static('public'));
-
-// Redirect root requests to superCoolApp.html
-// app.get('/', function(req, res){
-//      res.redirect('/superCoolApp.html');
-//  });
 
 // Catch API requests
 app.use('/api', routesAPI);
@@ -48,8 +38,8 @@ app.use(function(err, req, res, next){
 });
 
 
-//Set server to listen to port 3000
-app.listen(3000, function(){
-    console.log('Application listening on port 3000.');
+//Set server to listen to port 80
+app.listen(80, function(){
+    console.log('Application listening on port 80.');
     
 });
