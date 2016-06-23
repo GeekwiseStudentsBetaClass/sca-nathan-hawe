@@ -19,5 +19,10 @@
                 templateUrl: 'views/register.html',
                 controller: 'RegistrationController as registrationCtrl'
             })
+            .state('settings', {
+                url: '/settings',
+                templateUrl: 'views/settings.html',
+                controller: 'SettingsController as settingsCtrl'
+            })
     })
 })();

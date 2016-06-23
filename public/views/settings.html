@@ -1,0 +1,40 @@
+<!-- settings.html -->
+<div ng-show="!userCtrl.isLoggedIn">
+    You must be logged on to see this page.
+</div>
+
+<div class="col col-sm-8 col-sm-offset-2" ng-show="userCtrl.isLoggedIn">
+    <form ng-submit="settingsCtrl.onSubmit()">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" placeholder="Enter your username..." ng-model="settingsCtrl.settings.username" readonly>
+        </div>
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter your name..." ng-model="settingsCtrl.settings.name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email..." ng-model="settingsCtrl.settings.email" required>
+        </div>
+        <div class="form-group">
+            <label for="zipcode">Zipcode</label>
+            <input type="text" class="form-control" id="zipcode" placeholder="Enter your zipcode..." ng-model="settingsCtrl.settings.zipcode">
+        </div>
+        <div class="form-group">
+            <label for="twitter">Twitter Handle</label>
+            <input type="text" class="form-control" id="twitter" placeholder="Enter your Twitter handle..." ng-model="settingsCtrl.settings.twitter">
+        </div>
+        
+        <hr/>
+        <p>Enter a new password or leave blank to keep your current password.</p>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Enter your password..." ng-model="settingsCtrl.settings.password">
+        </div>
+        
+        <hr/>
+        <input type="submit" class="btn btn-default" value="Update!">
+    </form>
+</div>

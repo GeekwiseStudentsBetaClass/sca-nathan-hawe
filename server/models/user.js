@@ -21,7 +21,8 @@ var userSchema = new mongoose.Schema({
     zipcode: String,        // Weather API
     twitter: String,        // Twitter API
     hash: String,           
-    salt: String
+    salt: String,
+    admin: Boolean
 });
 
 // Set a hash with a randomly generated salt value and using the Password

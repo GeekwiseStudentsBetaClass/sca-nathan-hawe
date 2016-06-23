@@ -11,6 +11,7 @@ var app = express();
 
 var featureCtrl = require('../controllers/featureController');
 var authenticationCtrl = require('../controllers/authenticationController');
+var userController = require('../controllers/userController.js');
 var voteCtrl = require('../controllers/voteController');
 
 // Features
@@ -25,5 +26,6 @@ router.get('/getVotes', auth, voteCtrl.getVotes);
 // Users
 router.post('/register', authenticationCtrl.register);
 router.post('/login', authenticationCtrl.login);
+router.post('/updateUser', auth, userController.update);
 
 module.exports = router;

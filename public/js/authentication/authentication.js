@@ -55,6 +55,9 @@
                     twitter: payload.twitter
                 };
             }
+            else{
+                return {};
+            }
         };
 
         // Method for registering a new user
@@ -84,6 +87,27 @@
                 }
             )
         };
+
+        // Method for updating user information
+        this.updateUser = function(user){
+            return $http({
+                method: 'POST',
+                url: '/api/updateUser',
+                headers: {
+                    Authorization: 'Bearer ' + self.getToken()
+                },
+                data: user
+                })
+                .then(
+                    function(data){ // Success
+                    // Update the token
+                    self.saveToken(data.data.token);
+                    window.location.reload();
+                },
+                function(data){
+                    if(data.data.message){ alert(data.data.message);}
+                });
+        }
     }]);
 
 })();

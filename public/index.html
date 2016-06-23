@@ -11,6 +11,7 @@
         <script type="text/javascript" src="js/authentication/registerController.js"></script>
         <script type="text/javascript" src="js/authentication/loginController.js"></script>
         <script type="text/javascript" src="js/authentication/userController.js"></script>
+        <script type="text/javascript" src="js/users/settingsController.js"></script>
         <script type="text/javascript" src="js/database/superCoolApp.database.js"></script>
         <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
         <link rel="stylesheet" href="css/superCoolApp.css" />
@@ -24,6 +25,7 @@
                 </div>
                 <ul class="nav navbar-nav">
                     <li><a ui-sref="home">Home</a></li>
+                    <li><a ui-sref="settings" ng-show="userCtrl.isLoggedIn">Settings</a></li>
                     <li><a ui-sref="admin" ng-show="userCtrl.isLoggedIn && userCtrl.isAdmin">Admin</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
