@@ -39,7 +39,7 @@ app.use(function(err, req, res, next){
 
 
 //Set server to listen to port 80
-app.listen(80, function(){
-    console.log('Application listening on port 80.');
+app.listen(8080, function(){
+    console.log('Application listening on port 8080.');
     
 });
