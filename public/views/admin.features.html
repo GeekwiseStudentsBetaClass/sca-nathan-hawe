@@ -1,0 +1,75 @@
+<!-- admin.features.html -->
+<h1 class="text-center">Manage Features</h1>
+<div class="row">
+    <div>
+        <!-- Left Column: Features List-->
+        <div class="col-sm-4">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="text-center" ng-repeat="feature in adminFeaturesCtrl.data.features" ng-click="adminFeaturesCtrl.changeFeature($index)" ng-class="((adminFeaturesCtrl.tab === feature._id)?('active'):(''))">
+                    <a href=""><h3>{{feature.name}}</h3></span></a>
+                </li>
+                <li class="text-center" ng-click="adminFeaturesCtrl.addFeature()" ng-class="((adminFeaturesCtrl.tab === -1)?('active'):(''))">
+                    <a href=""><h3><span class="glyphicon glyphicon-plus-sign"></span></h3></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Right Column: Comments/Votes -->
+        <div class="col-sm-8">
+            <!-- Update -->
+            <form role="form" ng-submit="adminFeaturesCtrl.update()" ng-show="!adminFeaturesCtrl.newFeature && adminFeaturesCtrl.featureInformation._id!=''">
+                <div class="form-group">
+                    <label for="name">Feature ID</label>
+                    <input type="text" class="form-control" id="name" placeholder="" value="{{adminFeaturesCtrl.featureInformation._id}}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="name">Feature Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="" ng-model="adminFeaturesCtrl.featureInformation.name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Feature Description</label>
+                    <textarea class="form-control" id="description" placeholder="" ng-model="adminFeaturesCtrl.featureInformation.description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="upVotes">Upvotes</label>
+                    <input type="number" step="1" class="form-control" id="upVotes" placeholder="" ng-model="adminFeaturesCtrl.featureInformation.upVotes" required />
+                </div>
+                <div class="form-group">
+                    <label for="downVotes">Upvotes</label>
+                    <input type="number" step="1" class="form-control" id="downVotes" placeholder="" ng-model="adminFeaturesCtrl.featureInformation.downVotes" required />
+                </div>
+                <div class="form-group">
+                    <label for="totalVotes">Total Votes</label>
+                    <input type="number" class="form-control" id="totalVotes" placeholder="" value="{{adminFeaturesCtrl.featureInformation.upVotes - adminFeaturesCtrl.featureInformation.downVotes}}" readonly/>
+                </div>
+                <input type="submit" value="Update" class="btn btn-warning"/>
+                <button type="button" class="btn btn-danger" ng-click="adminFeaturesCtrl.removeFeature()">Delete This Feature</button>
+            </form>
+
+            <!-- Add -->
+            <form role="form" ng-submit="adminFeaturesCtrl.add()" ng-show="adminFeaturesCtrl.newFeature">
+                <div class="form-group">
+                    <label for="name">New Feature Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="" ng-model="adminFeaturesCtrl.featureInformation.name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">New Feature Description</label>
+                    <textarea class="form-control" id="description" placeholder="" ng-model="adminFeaturesCtrl.featureInformation.description" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="upVotes">Upvotes</label>
+                    <input type="number" step="1" class="form-control" id="upVotes" placeholder="" ng-model="adminFeaturesCtrl.featureInformation.upVotes" required />
+                </div>
+                <div class="form-group">
+                    <label for="downVotes">Downvotes</label>
+                    <input type="number" step="1" class="form-control" id="downVotes" placeholder="" ng-model="adminFeaturesCtrl.featureInformation.downVotes" required />
+                </div>
+                <div class="form-group">
+                    <label for="totalVotes">Total Votes</label>
+                    <input type="number" class="form-control" id="totalVotes" placeholder="" value="{{adminFeaturesCtrl.featureInformation.upVotes - adminFeaturesCtrl.featureInformation.downVotes}}" readonly/>
+                </div>
+                <input type="submit" value="Add" class="btn btn-default"/>
+            </form>
+        </div>
+    </div>
+</div>

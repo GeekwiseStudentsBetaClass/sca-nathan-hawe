@@ -15,7 +15,9 @@ var userController = require('../controllers/userController.js');
 var voteCtrl = require('../controllers/voteController');
 
 // Features
-router.post('/addFeature', featureCtrl.addFeature);
+router.post('/addFeature', auth, featureCtrl.addFeature);
+router.post('/removeFeature', auth, featureCtrl.removeFeature);
+router.post('/updateFeature', auth, featureCtrl.updateFeature);
 router.get('/getFeatures', featureCtrl.getFeatures);
 router.post('/addComment', auth, featureCtrl.addComment);
 
@@ -27,5 +29,7 @@ router.get('/getVotes', auth, voteCtrl.getVotes);
 router.post('/register', authenticationCtrl.register);
 router.post('/login', authenticationCtrl.login);
 router.post('/updateUser', auth, userController.update);
+router.post('/getUsers', auth, userController.getUsers);
+router.post('/setAdmin', auth, userController.setAdmin);
 
 module.exports = router;

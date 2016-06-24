@@ -17,7 +17,8 @@ var featureSchema = new mongoose.Schema({
     comments: [Comments],
     upVotes: Number,
     downVotes: Number,
-    totalVotes: Number
+    totalVotes: Number,
+    deleted: Boolean
 })
 
 // Process up votes

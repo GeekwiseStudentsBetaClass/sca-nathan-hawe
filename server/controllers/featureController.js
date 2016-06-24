@@ -4,8 +4,112 @@ var Vote = mongoose.model('Vote');
 
 // Add a feature
 module.exports.addFeature = function(req, res){
-    console.log('addFeature is a stub.');
+    // Return an error if there is no user or user is not admin
+    if(!req.payload._id || !req.payload.admin){
+        res.status(401).json({
+            'message': 'UnauthorizedError: unable to add feature'
+        });
+
+        return;
+    }
+
+    // Add feature
+    var feature = new Feature();
+    feature.name = req.body.name;
+    feature.description = req.body.description;
+    feature.upVotes = req.body.upVotes;
+    feature.downVotes = req.body.downVotes;
+    feature.totalVotes = req.body.upVotes - req.body.downVotes;
+    feature.deleted = false;
+    
+    feature.save(function(err){
+        if(!err){   // Success
+            res.status(201).json({
+                'message': 'success'
+            });
+        }else{     // Failure
+            console.log(err);
+            res.status(400).json({
+                'message': err.name + ': ' + err.message
+            });
+            return;
+        }
+    });
 };
+
+// Update a feature
+module.exports.updateFeature = function(req, res){
+    // Return an error if there is no user or user is not admin
+    if(!req.payload._id || !req.payload.admin){
+        res.status(401).json({
+            'message': 'UnauthorizedError: unable to add feature'
+        });
+
+        return;
+    }
+
+    // Get the requested feature
+    Feature
+        .findById(req.body._id)
+        .then(function(feature){
+            // update the returned feature's values
+            feature.name = req.body.name;
+            feature.description = req.body.description;
+            feature.upVotes = req.body.upVotes;
+            feature.downVotes = req.body.downVotes;
+            feature.totalVotes = req.body.upVotes - req.body.downVotes;
+
+            // save the updated feature
+            feature.save(function(err){
+                if(!err){   // Success
+                    res.status(201).json({
+                        'message': 'success'
+                    });
+                }else{     // Failure
+                    console.log(err);
+                    res.status(400).json({
+                        'message': err.name + ': ' + err.message
+                    });
+                    return;
+                }
+            });
+    });
+};
+
+// Remove a feature
+module.exports.removeFeature = function(req, res){
+    // Return an error if there is no user or user is not admin
+    if(!req.payload._id || !req.payload.admin){
+        res.status(401).json({
+            'message': 'UnauthorizedError: unable to add feature'
+        });
+
+        return;
+    }
+
+    // Get the requested feature
+    Feature
+        .findById(req.body._id)
+        .then(function(feature){
+            // update the returned feature's deleted field
+            feature.deleted = true;
+
+            // save the updated feature
+            feature.save(function(err){
+                if(!err){   // Success
+                    res.status(201).json({
+                        'message': 'success'
+                    });
+                }else{     // Failure
+                    console.log(err);
+                    res.status(400).json({
+                        'message': err.name + ': ' + err.message
+                    });
+                    return;
+                }
+            });
+    });
+}
 
 // Get all features
 module.exports.getFeatures = function(req, res) {
@@ -13,7 +117,7 @@ module.exports.getFeatures = function(req, res) {
     // there are nothing required in the request.
     
     Feature
-        .find({})
+        .find({deleted: {$ne:true}})
         .sort({totalVotes: -1})
         .exec(function(err, features){
             if(!err){

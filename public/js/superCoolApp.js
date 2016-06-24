@@ -3,7 +3,7 @@
 
     app.config(function($stateProvider, $urlRouterProvider){
         $urlRouterProvider.otherwise('home');
-        
+        //$urlRouterProvider.when('/admin', '/admin/features');
         $stateProvider
             .state('home', {
                 url: '/home',
@@ -28,6 +28,16 @@
                 url: '/admin',
                 templateUrl: 'views/admin.html',
                 controller: 'AdminController as adminCtrl'
+            })
+            .state('admin.features', {
+                url: '/features',
+                templateUrl: 'views/admin.features.html',
+                controller: 'AdminFeaturesController as adminFeaturesCtrl'
+            })
+            .state('admin.users', {
+                url: '/users',
+                templateUrl: 'views/admin.users.html',
+                controller: 'AdminUsersController as adminUsersCtrl'
             })
     })
 })();

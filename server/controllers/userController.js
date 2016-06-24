@@ -57,3 +57,65 @@ module.exports.update = function(req, res){
             });
         });
 };
+
+// Method that returns a list of users
+module.exports.getUsers = function(req, res){
+    // Return an error if there is no user or user is not admin
+    if(!req.payload._id || !req.payload.admin){
+        res.status(401).json({
+            'message': 'UnauthorizedError: unable to add feature'
+        });
+
+        return;
+    }
+
+    // Get all users
+    User
+        .find({deleted: {$ne:true}})
+        .exec(function(err, users){
+            if(!err){
+                res.status(200).json(users);
+            }
+            else {
+                console.log(err);
+                res.status(400).json({
+                    'message': err.name + ': ' + err.message
+                });
+            }
+    });
+};
+
+// Method for changing user's admin status
+ module.exports.setAdmin = function(req, res){
+    // Return an error if there is no user or user is not admin
+    if(!req.payload._id || !req.payload.admin){
+        res.status(401).json({
+            'message': 'UnauthorizedError: unable to add feature'
+        });
+
+        return;
+    }
+
+    // Get the user by their id
+    User
+        .findById(req.body._id)
+        .then(function(user){
+            // update status
+            user.admin = req.body.admin;
+
+            // save updated user
+            user.save(function(err){
+                if(!err){   // Success
+                    res.status(201).json({
+                        'message': 'success'
+                    });
+                }else{     // Failure
+                    console.log(err);
+                    res.status(400).json({
+                        'message': err.name + ': ' + err.message
+                    });
+                    return;
+                }
+            });
+    });
+ }

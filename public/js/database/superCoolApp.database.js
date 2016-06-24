@@ -8,7 +8,7 @@
     /* database service */
     myApp.service('superCoolAppDatabaseService', ['$http', '$interval', 'authentication', function($http, $interval, authentication){
         var me = this;
-        var promise;
+        this.promise = false;
         
         this.data = {
             features: []
@@ -93,7 +93,7 @@
         
         this.start = function(callback){
             this.getFeatures(callback);
-            promise = $interval(me.getFeatures, 3000);
+            me.promise = $interval(me.getFeatures, 3000);
         };
         
     }]);   

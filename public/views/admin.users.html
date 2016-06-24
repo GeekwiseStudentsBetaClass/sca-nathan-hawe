@@ -1,0 +1,27 @@
+<!-- admin.users.html -->
+<h1 class="text-center">Manage Users</h1>
+<div class="row">
+    <table class="table table-condensed table-striped">
+        <tr>
+            <th>Name</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>ZIP</th>
+            <th>Twitter</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="user in adminUsersCtrl.users" ng-class="((user.admin)?('success'):(''))">
+            <td>{{user.name}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.zipcode}}</td>
+            <td>{{user.twitter}}</td>
+            <td><button class="btn btn-warning" ng-click="adminUsersCtrl.resetPassword(user._id)" disabled>Reset Password</button></td>
+            <td>
+                <button class="btn btn-warning" ng-click="adminUsersCtrl.makeAdmin(user._id)" ng-show="!user.admin" disabled>Make Admin</button>
+                <button class="btn btn-warning" ng-click="adminUsersCtrl.removeAdmin(user._id)" ng-show="user.admin" disabled>Remove Admin</button>
+            </td>
+        </tr>
+    </table>
+</div>

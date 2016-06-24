@@ -6,6 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script type="text/javascript" src="js/angular.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.js"></script>
         <script type="text/javascript" src="js/superCoolApp.js"></script>
         <script type="text/javascript" src="js/authentication/authentication.js"></script>
         <script type="text/javascript" src="js/authentication/registerController.js"></script>
@@ -13,21 +15,29 @@
         <script type="text/javascript" src="js/authentication/userController.js"></script>
         <script type="text/javascript" src="js/users/settingsController.js"></script>
         <script type="text/javascript" src="js/admin/adminController.js"></script>
+        <script type="text/javascript" src="js/admin/adminFeaturesController.js"></script>
+        <script type="text/javascript" src="js/admin/adminUsersController.js"></script>
         <script type="text/javascript" src="js/database/superCoolApp.database.js"></script>
         <link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
         <link rel="stylesheet" href="css/superCoolApp.css" />
     </head>
     
     <body ng-controller="UserController as userCtrl">
-        <div class="container col col-sm-12">
+        <div class="container-fluid col col-sm-12">
             <nav class="navbar navbar-dark" role="navigation">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">Super Cool App</a>
                 </div>
                 <ul class="nav navbar-nav">
                     <li><a ui-sref="home">Home</a></li>
-                    <li><a ui-sref="settings" ng-show="userCtrl.isLoggedIn">Settings</a></li>
-                    <li><a ui-sref="admin" ng-show="userCtrl.isLoggedIn && userCtrl.currentUser.admin">Admin</a></li>
+                    <li ng-show="userCtrl.isLoggedIn"><a ui-sref="settings">Settings</a></li>
+                    <li class="dropdown" ng-show="userCtrl.isLoggedIn && userCtrl.currentUser.admin">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown">Admin <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a ui-sref="admin.features">Features</a></li>
+                            <li><a ui-sref="admin.users">Users</a></li>
+                        </ul>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a ui-sref="register" ng-show="!userCtrl.isLoggedIn"><span class="glyphicon glyphicon-user"></span>&nbsp;Sign Up</a></li>
